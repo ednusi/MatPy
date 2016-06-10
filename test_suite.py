@@ -1,13 +1,75 @@
+import numpy as np
+import scipy as sp
+import matplotlib
+from matplotlib import pyplot as plot
+
+from scipy.optimize import minimize
+
+import timeit
+from memory_profiler import memory_usage
+
+
+def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",title="",fontsize=14):
+
+    fig = plot.figure()
+    ax = fig.gca(projection='3d')
+    plot.title(title)
+    matplotlib.rcParams.update({'font.size': fontsize})
+
+    x = np.zeros(0)
+    y = np.zeros(0)
+
+    for y_val in y_domain:
+
+        x = np.append(x,x_domain)
+
+        for x_val in x_domain:
+
+            y = np.append(y,y_val)
+
+    z = np.zeros(0)
+
+    for index, value in enumerate(x):
+
+        model_params = (x[index],y[index])
+        z = np.append(z,function(model_params)[1])
+
+    ax.plot(x,y,z,"p")
+
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_zlabel(zlabel)
+
+    plot.show()
+    
+# conveniently creates a plot with the attributes given
+def plotSingle2D(comp,xtitle,ytitle,xscale,yscale):
+	
+	global exp
+	exp = []                           # ***** target 
+	exp = np.loadtxt('ref/HSRS/22')
+
+	fig, ax = plot.subplots(figsize=(9,6))
+
+	ax.plot(comp[:,0],comp[:,1],lw=3)
+	ax.plot(exp[:,0], exp[:,1],'o',zorder=5,markevery=5)
+
+	ax.set_xlabel(xtitle, fontsize=35, labelpad=15)
+	ax.set_ylabel(ytitle, fontsize=35, labelpad=15)
+	ax.tick_params(axis='x', labelsize=25, pad = 10)
+	ax.tick_params(axis='y', labelsize=25, pad = 10)
+
+	# we maintain only positive x&y values
+	ax.set_xscale(xscale, nonposx='clip')
+	ax.set_yscale(yscale, nonposx='clip')
+	
+	ax.set_xlim(0,exp[-1,0]+1) # margin
+	ax.grid(True)
+	fig.tight_layout()
+	plot.show()
+        
+
 def minimize_suite(function, methods, guess):
-
-	import numpy as np
-	import scipy as sp
-	from matplotlib import pyplot as plot
-
-	from scipy.optimize import minimize
-
-	import timeit
-	from memory_profiler import memory_usage
 
 	start = np.zeros(0)
 	stop = np.zeros(0)
