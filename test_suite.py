@@ -32,7 +32,7 @@ def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",t
     for index, value in enumerate(x):
 
         model_params = (x[index],y[index])
-        z = np.append(z,function(model_params)[1])
+        z = np.append(z,function(model_params))
 
     ax.plot(x,y,z,"p")
 
