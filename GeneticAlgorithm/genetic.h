@@ -8,6 +8,8 @@ double *fitnessscores(double *pGen, int nums);
 double negsquare(double x);
 double *probability(double *fitness,double totalfitness,int nums);
 double baselined(double *fitness, int nums);
+int *swapchromosomes(int firstchrom, int secondchrom);
+
 
 /* Returns largest element of a list */
 double maxoflist(double *list, int nums){
@@ -24,7 +26,6 @@ double maxoflist(double *list, int nums){
 
 }
 
-
 /* Returns smallest element of list, to baseline */
 double minoflist(double *list, int nums){
 
@@ -39,7 +40,7 @@ double minoflist(double *list, int nums){
 	return min;
 }
 
-void randomgen(double *pGen, int nums){
+void randomgen(long *pGen, int nums){
 	srand(time(NULL));
 
 	/* Generates twenty numbers, at each spot we store a different random number */
@@ -50,18 +51,16 @@ void randomgen(double *pGen, int nums){
 }
 
 /* Depending on pseudorandom distribution may not be completely evenly distributed */
-long double randinrange(double upperbound){	
-	
+int randinrange(int upperbound){	
 	srand(time(NULL));
-	return ((double)rand()/RAND_MAX)*((long long)upperbound); /* Gets value from zero to one and then scales up by upper bound */
+	return ((double)rand()/RAND_MAX)*(upperbound); /* Gets value from zero to one and then scales up by upper bound */
 }
 
-
 /* Prints all numbers */
-void printall(double *pNums, int nums){
+void printall(long *pNums, int nums){
 	int i;
 	for(i=0;i<nums;i++){
-		printf("%f\n",pNums[i]);
+		printf("%l\n",pNums[i]);
 	}
 	printf("------------------\n");
 }

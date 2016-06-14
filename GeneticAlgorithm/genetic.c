@@ -1,27 +1,61 @@
 /* Edward Nusinovich */
-/* Implementing GA */
+/* Implementing Genetic Algorithm for polynomial function */
 
 
 #include "genetic.h"
 
 int main(){
 	
-	int popsize = 20;
-
+	/* SETUP AND INITIAL CONDITIONS */
+	
+	int popsize = 20; /* Members of the initial population */
 	double *pGen = malloc(sizeof(double)*popsize); /* Leaves space for twenty doubles (160 bytes) */
-	
 	randomgen(pGen,popsize); /* Establishes first generation */
-	printall(pGen,popsize);	
+	int tolerance = 10; /* We know that the actual solution here is 0, so if a selection is within 10 of zero, we can stop the algorithm */ 
+	
+	
+	double *newGen = malloc(sizeof(double)*popsize); /* Will hold our new generation */
+	int counter = 0; /* Stores position where members of new generation will be saved */
+	
+	long firstselection = 0;
+	long secondselection = 0;
 
+	/* At this point we have our generation -- pGen, and our set of fitness scores -- fitness */
 	double *fitness = fitnessscores(pGen,popsize); /* Assigns a fitness score to each population member */		
-	printall(fitness,popsize);
 	
-	/* At this point we have our 1st generation -- pGen, and our first set of fitness scores -- fitness */
-	int *pairofchromosomes = roulettewheel(fitness, popsize);
+	while(counter!=popsize-1){
+		
+		int *pairofchromosomes = roulettewheel(fitness, popsize);
 
-	printf("Our first selection was %f\nand our second selection was %d\n",pGen[pairofchromosomes[0]],pGen[pairofchromosomes[1]]);
+		firstselection = pGen[pairofchromosomes[0]];
+		secondselection = pGen[pairofchromosomes[1]];
+		
+		pairofchromosomes = swapchromosomes(firstselection,secondselection);
 	
+	}
 	return 0;
+}
+
+/* Swaps the last 8 bits of two chromosomes (crossing-over) */
+/* WORKS FOR INTS, NOT DOUBLES */
+int *swapchromosomes(int firstchrom, int secondchrom){
+	
+	int bitshift = randinrange(7);
+	
+	int lasteightfirst = firstchrom & (0xff>>bitshift); /* gets last eight */
+	int lasteightsecond = secondchrom & (0xff>>bitshift);
+	
+	firstchrom = firstchrom ^ lasteightfirst; /* zeroes out last eight */
+	secondchrom = secondchrom ^ lasteightsecond;
+	
+	firstchrom = firstchrom | lasteightsecond; /* adds in bits from opposite solution */
+	secondchrom = secondchrom |lasteightfirst;
+	
+	int *swappedpair = malloc(sizeof(int)*2);
+	swappedpair[0] = firstchrom;
+	swappedpair[1] = secondchrom;
+	
+	return swappedpair;
 }
 
 /* Returns an array of two distinct elements that are selected based on fitness */
@@ -36,9 +70,7 @@ int *roulettewheel(double *fitness, int nums){
 	while((secondselection=rouletteindex(wheel,((double)rand())/RAND_MAX, nums))==selected){printf("Collision... Trying again...\n");} 
 		
 	int *pairofchromosomes = malloc(sizeof(int)*2);
-	
-	printf("The probability of the first was %f, the second was %f\n", wheel[selected], wheel[secondselection]);
-	
+		
 	pairofchromosomes[0] = selected;
 	pairofchromosomes[1] = secondselection;
 	
