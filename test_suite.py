@@ -42,6 +42,44 @@ def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",t
 
     plot.show()
     
+def barGraph(data, ylabel='', title='', xticklabels=None):
+
+	N = len(data) # Number of data points
+	ind = np.arange(N)  # the x locations for the groups
+	width = 0.50       # the width of the bars
+
+	matplotlib.rcParams.update({'font.size': 18})
+	fig, ax = plot.subplots(figsize=(20,10))
+	rects1 = ax.bar(ind, data, width, color='r')
+
+	# add some text for labels, title and axes ticks
+	ax.set_ylabel(ylabel)
+	ax.set_title(title)
+	ax.set_xticks(ind + width/2.)
+	
+	if xticklabels is not None:
+		ax.set_xticklabels(xticklabels)
+
+	# puts graph labels above bars
+	def autolabel(rects):
+		# attach some text labels
+		for index, rect in enumerate(rects):
+			
+			height = rect.get_height()
+			
+			if data[index] == -1.0:
+				ax.text(rect.get_x() + rect.get_width()/2., 1.01*height,
+					'Not given\n by algorithm',
+					ha='center', va='bottom')
+			else:    
+				ax.text(rect.get_x() + rect.get_width()/2., 1.01*height,
+					'%d' % int(height),
+					ha='center', va='bottom')
+
+	autolabel(rects1)
+	plot.ylim(0,max(data)*1.5) # enforces limits on axis range
+	plot.show()
+    
 # conveniently creates a plot with the attributes given
 def plotSingle2D(comp,xtitle,ytitle,xscale,yscale):
 	
@@ -115,7 +153,7 @@ def minimize_suite(function, methods, guess):
 		print
 
 
-"""For custom minimization methods in SciPy, like basinhopping, where the returned object provides more information"""
+# For custom minimization methods in SciPy, like basinhopping, where the returned object provides more information
 def custom_minimize(function, algorithm, guess):
 
 	def iter_minimize(): # lightweight version of iter_minimize for a single optimization method
