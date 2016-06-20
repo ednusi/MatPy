@@ -1,0 +1,9 @@
+-To use virtual environments in jupyter:
+
+(From within virtualenv)
+	ipython kernelspec install-self --user
+
+(Copy the new kernelspec somewhere useful)
+	mkdir -p ~/.ipython/kernels
+	mv ~/.local/share/jupyter/kernels/pythonX ~/.ipython/kernels/<kernelname>
+
