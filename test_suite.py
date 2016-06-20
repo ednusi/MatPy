@@ -68,7 +68,7 @@ def plotSingle2D(comp,xtitle,ytitle,xscale,yscale):
 	fig.tight_layout()
 	plot.show()
         
-
+"""Takes specific methods provided by scipy.optimize"""
 def minimize_suite(function, methods, guess):
 
 	start = np.zeros(0)
@@ -113,3 +113,54 @@ def minimize_suite(function, methods, guess):
 		print '{0} took {1} seconds. The result, {4} was found at ({2}, {3})'.format(method,exec_time[counter],result[counter].x[0],result[counter].x[1],result[counter].fun)
 		print '{0} used {1} megabytes and took {2} iterations'.format(method,most_mem[counter],num_iters[counter])
 		print
+
+
+"""For custom minimization methods in SciPy, like basinhopping, where the returned object provides more information"""
+def custom_minimize(function, algorithm, guess):
+
+	def iter_minimize(): # lightweight version of iter_minimize for a single optimization method
+
+		start = timeit.default_timer()
+
+		result = algorithm(function, guess) # calls the minimizer
+
+		iterations = -1
+
+		if 'nit' in result.keys():    
+			iterations = result.get('nit')
+
+		stop = timeit.default_timer()
+
+		return iterations, start, stop, result
+
+	#tracks amount of memory used
+	most_mem = max(memory_usage((iter_minimize, (),)))
+	num_iters, start, stop, result = iter_minimize()
+
+	exec_time = stop-start
+
+	print '{0} took {1} seconds. The result, {2} was found at ({3})'.format(algorithm.__name__,exec_time,result.fun,result.x)
+	print '{0} used {1} megabytes and took {2} iterations'.format(algorithm.__name__,most_mem,num_iters)
+	print
+	
+# Our workaround for GA
+def GA_minimize(function, guess):
+    
+    from pybrain.optimization import GA
+    
+    result = GA(function,[guess, ], minimize=True) # set to minimize by default
+    
+    start = timeit.default_timer()
+    mem = max(memory_usage((result.learn,(),)))
+    stop = timeit.default_timer()
+    
+    print result.learn() #Comment this out for faster performance, i.e. for evaluation
+
+    exec_time = stop-start
+
+    print '{0} took {1} seconds'.format('Genetic Algorithm',exec_time)
+    print '{0} used {1} megabytes'.format('Genetic Algorithm',mem)
+    print
+
+	
+
