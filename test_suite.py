@@ -45,8 +45,10 @@ def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",t
 def barGraph(data, ylabel='', title='', xticklabels=None):
 
 	N = len(data) # Number of data points
-	ind = np.arange(N)  # the x locations for the groups
+		
 	width = 0.50       # the width of the bars
+	offset = width/2.
+	ind = np.arange(N)+offset  # the x locations for the groups
 
 	matplotlib.rcParams.update({'font.size': 18})
 	fig, ax = plot.subplots(figsize=(20,10))
@@ -55,7 +57,7 @@ def barGraph(data, ylabel='', title='', xticklabels=None):
 	# add some text for labels, title and axes ticks
 	ax.set_ylabel(ylabel)
 	ax.set_title(title)
-	ax.set_xticks(ind + width/2.)
+	ax.set_xticks(ind + offset)
 	
 	if xticklabels is not None:
 		ax.set_xticklabels(xticklabels)
@@ -68,11 +70,11 @@ def barGraph(data, ylabel='', title='', xticklabels=None):
 			height = rect.get_height()
 			
 			if data[index] == -1.0:
-				ax.text(rect.get_x() + rect.get_width()/2., 1.01*height,
+				ax.text(rect.get_x() + offset, 1.01*height,
 					'Not given\n by algorithm',
 					ha='center', va='bottom')
 			else:    
-				ax.text(rect.get_x() + rect.get_width()/2., 1.01*height,
+				ax.text(rect.get_x() + offset, 1.01*height,
 					'%d' % int(height),
 					ha='center', va='bottom')
 
@@ -181,7 +183,7 @@ def custom_minimize(function, algorithm, guess):
 	print '{0} used {1} megabytes and took {2} iterations'.format(algorithm.__name__,most_mem,num_iters)
 	print
 	
-# Our workaround for GA
+# Our workaround for evaluating GA performance
 def GA_minimize(function, guess):
     
     from pybrain.optimization import GA
