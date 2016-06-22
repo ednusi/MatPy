@@ -8,6 +8,7 @@ from scipy.optimize import minimize
 import timeit
 from memory_profiler import memory_usage
 
+matplotlib.rcParams.update({'font.size': 16}) # default font size
 
 def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",title="",fontsize=14):
 
@@ -82,8 +83,27 @@ def barGraph(data, ylabel='', title='', xticklabels=None):
 	plot.ylim(0,max(data)*1.5) # enforces limits on axis range
 	plot.show()
     
-# conveniently creates a plot with the attributes given
-def plotSingle2D(comp,xtitle,ytitle,xscale,yscale):
+# expecting a set of x data in first col and y data in second col
+def plot2D(data, xtitle, ytitle, title):
+	
+	fig, ax = plot.subplots(figsize=(12, 9))
+
+	ax.plot(data[:,0],data[:,1],lw=3) # plots first col vs second because stress vs strain
+	
+	ax.set_xlabel(xtitle)
+	ax.set_ylabel(ytitle)
+	ax.set_title(title)
+	
+	# we maintain only positive x&y values
+	plot.xlim(min(data[:,0]),max(data[:,0])*1.05)
+	plot.ylim(min(data[:,1]),max(data[:,1])*1.05)
+
+	ax.grid(True)
+	fig.tight_layout()
+	plot.show()
+    
+# conveniently creates a plot with the attributes given to compare to experimental data
+def plotExperimental2D(comp,xtitle,ytitle,xscale,yscale):
 	
 	global exp
 	exp = []                           # ***** target 
@@ -117,9 +137,9 @@ def minimize_suite(function, methods, guess):
 	most_mem = np.zeros(0)
 	result = []
 
-#runtime code goes here
+	#runtime code goes here
 
-#testing every minimization method
+	#testing every minimization method
 	for method in methods:
         
 		def iter_minimize(method, num_iters, start, stop, guess):
@@ -147,7 +167,7 @@ def minimize_suite(function, methods, guess):
 
 	exec_time = stop-start
 
-# If an algorithm took (-1) iterations, the number of iterations was not returned
+	# If an algorithm took (-1) iterations, the number of iterations was not returned
 	for counter, method in enumerate(methods):
 
 		print '{0} took {1} seconds. The result, {4} was found at ({2}, {3})'.format(method,exec_time[counter],result[counter].x[0],result[counter].x[1],result[counter].fun)
