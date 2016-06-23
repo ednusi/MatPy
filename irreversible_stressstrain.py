@@ -26,7 +26,7 @@ class StressStrain:
 		exp = np.loadtxt(data_file)		   # ***** file which contains data	
 
 	
-	def _error_evaluation_rms(self, errors):
+	def error_evaluation_rms(self, errors):
 		
 		sum_of_squares = 0
 		
@@ -81,7 +81,6 @@ class StressStrain:
 					interpolated_stress = left_weight*strain_stress[ical,1] + right_weight*strain_stress[ical+1,1]
 						
 					stress_error = interpolated_stress - exp[iexp,1]    
-					#print stress_error
 					
 					#adds value, we want to find difference between these approximated data points and the real results
 					cal_val.append([interpolated_strain,interpolated_stress])                 
@@ -89,14 +88,8 @@ class StressStrain:
 					
 					break
 
-		#print errors
-		error_rms = _error_evaluation_rms(errors)    
+		error_rms = self.error_evaluation_rms(errors)    
 		cal_val = np.asarray(cal_val)
 
-		#print cal_val
-		#----------------------------
-
-		# return error as well as the results of stress-strain curve?
-		#return strain_stress, error_rms
 		return error_rms
 

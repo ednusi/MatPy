@@ -176,13 +176,20 @@ def minimize_suite(function, methods, guess):
 
 
 # For custom minimization methods in SciPy, like basinhopping, where the returned object provides more information
-def custom_minimize(function, algorithm, guess):
+def custom_minimize(function, algorithm, bounds = None, guess = None):
 
 	def iter_minimize(): # lightweight version of iter_minimize for a single optimization method
 
 		start = timeit.default_timer()
+		
+		result = 0
+		
+		# some minimization techniques do not require an initial guess
+		if guess is not None:
+			result = algorithm(function, guess) 
 
-		result = algorithm(function, guess) # calls the minimizer
+		else:
+			result = algorithm(function, bounds)
 
 		iterations = -1
 
