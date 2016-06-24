@@ -23,9 +23,12 @@ class StressStrain:
 	
 	# can take different file types
 	def __init__(self,data_file,type='txt'):
-				
+		
+		global exp						   # experimental dataset to minimize parameters
+		exp = []                           # ***** target 
+		
 		if type is 'txt':
-			self.exp = np.loadtxt(data_file)		   # ***** file which contains data	
+			exp = np.loadtxt(data_file)		   # ***** file which contains data	
 			
 		elif type is 'xml':
 
@@ -41,11 +44,11 @@ class StressStrain:
 				distable.append(disrow)
 
 			del distable[0] # gets rid of header
-			self.exp = np.array(distable)
+			exp = np.array(distable)
 
 	# returns experimental data gathered from initialization
 	def get_experimental_data(self):
-		return self.exp
+		return exp
 	
 	# root means squared used to evaluate magnitude of error
 	def error_evaluation_rms(self, errors):
@@ -69,12 +72,14 @@ class StressStrain:
 
 		strain_stress, WTN = irreverisble.mechanics(prec_stress,SS_stress,T_service,model_parameters,no_samples)
 		strain_stress = np.array(np.trim_zeros(strain_stress)).reshape(-1,2)
-		
+		#print strain_stress
+
+		#----------------------------
 		cal_val = []
 		errors = []
 
 		#traverses experimental data points
-		for iexp, data in enumerate(self.exp[:,0]):
+		for iexp, data in enumerate(exp[:,0]):
 			
 			#finding nearest neighbors that surround the data points, and using them to determine the error
 			for ical, data in enumerate(strain_stress[:,0]):
@@ -84,7 +89,7 @@ class StressStrain:
 				left_stresspoint = strain_stress[ical,0]
 				right_stresspoint = strain_stress[ical+1,0]
 				
-				exp_datapoint = self.exp[iexp,0]
+				exp_datapoint = exp[iexp,0]
 				
 				# finding the two nearest stress points and interpolating stress and strain
 				if(exp_datapoint>left_stresspoint and exp_datapoint<right_stresspoint):
@@ -102,7 +107,7 @@ class StressStrain:
 					interpolated_stress = left_weight*left_stresspoint + right_weight*right_stresspoint
 					interpolated_strain = left_weight*strain_stress[ical,1] + right_weight*strain_stress[ical+1,1]
 						
-					strain_error = interpolated_strain - self.exp[iexp,1]    
+					strain_error = interpolated_strain - exp[iexp,1]    
 					
 					#adds value, we want to find difference between these approximated data points and the real results
 					cal_val.append([interpolated_stress,interpolated_strain])                 

@@ -84,14 +84,12 @@ def barGraph(data, ylabel='', title='', xticklabels=None):
 	plot.show()
     
 # expecting a set of x data in first col and y data in second col
-def plot2D(data, xtitle='', ytitle='', title='', marker='b-'):
+def plot2D(data, xtitle, ytitle, title):
 	
-	# default font size
-	matplotlib.rcParams.update({'font.size': 16}) 
 	fig, ax = plot.subplots(figsize=(12, 9))
 
-	# plot stress vs strain
-	ax.plot(data[:,0],data[:,1],marker) 
+	ax.plot(data[:,0],data[:,1],lw=3) # plots first col vs second because stress vs strain
+	
 	ax.set_xlabel(xtitle)
 	ax.set_ylabel(ytitle)
 	ax.set_title(title)
@@ -139,6 +137,8 @@ def minimize_suite(function, methods, guess):
 	most_mem = np.zeros(0)
 	result = []
 
+	#runtime code goes here
+
 	#testing every minimization method
 	for method in methods:
         
@@ -161,10 +161,8 @@ def minimize_suite(function, methods, guess):
 
 			return num_iters, start, stop
 
-		#tracks amount of memory used  by current process (-1) every interval (.2 seconds)
-		current_memory = memory_usage(-1, interval=.2) 
-		
-		most_mem = np.append(most_mem, max(current_memory))
+		#tracks amount of memory used
+		most_mem = np.append(most_mem, max(memory_usage((iter_minimize, (method, num_iters, start, stop, guess),))))
 		num_iters, start, stop = iter_minimize(method, num_iters, start, stop, guess)
 
 	exec_time = stop-start
@@ -202,10 +200,8 @@ def custom_minimize(function, algorithm, bounds = None, guess = None):
 
 		return iterations, start, stop, result
 
-	#tracks amount of memory used  by current process (-1) every interval (.2 seconds)
-	current_memory = memory_usage(-1, interval=.2) 
-	most_mem = np.append(most_mem, max(current_memory))
-	
+	#tracks amount of memory used
+	most_mem = max(memory_usage((iter_minimize, (),)))
 	num_iters, start, stop, result = iter_minimize()
 
 	exec_time = stop-start
