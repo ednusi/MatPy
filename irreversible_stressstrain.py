@@ -12,6 +12,7 @@ import scipy.optimize as sciop
 from scipy.optimize import basinhopping
 import subprocess
 
+""" Compiles the Fortran code """
 bashCommand = "make fortran"
 import subprocess
 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
