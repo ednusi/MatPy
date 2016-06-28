@@ -10,6 +10,7 @@ performance, and format them for ML.
 
 import numpy as np
 import scipy as sp
+import math
 
 from scipy.optimize import minimize
 from sklearn.linear_model import LinearRegression
@@ -26,14 +27,14 @@ def linfit(data, start=None):
 	return LinearRegression().fit(*format_data(data,start))
 	
 # clusters the data using mini batch kmeans
-def kminicluster(data, numclusters, start=None):
+def kminicluster(data, numclusters, start=None,init='kmeans++'):
 	
-	return mbkmeans(n_clusters=numclusters).fit(*format_data(data,start))
+	return mbkmeans(n_clusters=numclusters,init=init).fit(*format_data(data,start))
 	
 # same as above but without mini batch (runs slower, should be more accurate)
-def kcluster(data,numclusters,start=None):
+def kcluster(data,numclusters,start=None,init='kmeans++'):
 	
-	return KMeans(n_clusters=numclusters).fit(*format_data(data,start))
+	return KMeans(n_clusters=numclusters,init=init).fit(*format_data(data,start))
 	
 # this method will put data in the appropriate format for regression (Scikit-Learn)
 def format_data(data, start=None):
@@ -44,6 +45,34 @@ def format_data(data, start=None):
 def combine_data(data1,data2):
 	
 	return np.array([list(a) for a in zip(data1,data2)])
+
+# converts every non-numerical list value to zero
+def regularize(data):
+	
+	for index, val in enumerate(data):
+		if math.isinf(val) or math.isnan(val):
+			data[index]=0
+        
+	return data
+
+# takes predictions from kmeans clustering and split the table into two groups
+def splitdata(data, predictions):
+	
+	initgroup = predictions[0]
+	splitgroup = 0
+
+	for index, val in enumerate(predictions):
+		
+		# as soon as we reach the new group, we have found our dividing point
+		if val != initgroup:
+			splitgroup = index
+			break
+        
+	"""Instead of creating tuples, we create lists"""
+	elastic = combine_data(data[:splitgroup,0],data[:splitgroup,1]) 
+	plastic = combine_data(data[splitgroup:,0],data[splitgroup:,1])
+	
+	return elastic, plastic
 
 # converts a bunch of domain values to lists, because each domain value must be iterable for training data
 def expToTrain(exp,start=None):
