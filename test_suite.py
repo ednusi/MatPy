@@ -73,6 +73,27 @@ def splitdata(data, predictions):
 	plastic = combine_data(data[splitgroup:,0],data[splitgroup:,1])
 	
 	return elastic, plastic
+	
+def get_slopes(model):
+    
+    strain = model[:,0]
+    stress = model[:,1]
+
+    slopes = []
+
+    """Approximating the partial derivatives of stress/strain"""
+    for index in xrange(len(stress)-1):
+
+        rise = (stress[index+1]-stress[index])
+        run = (strain[index+1]-strain[index])
+
+        if run==0:
+            slopes.append(0)
+
+        else:
+            slopes.append(rise/run)
+
+    return np.array(slopes)
 
 # converts a bunch of domain values to lists, because each domain value must be iterable for training data
 def expToTrain(exp,start=None):
