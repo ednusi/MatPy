@@ -74,6 +74,7 @@ def splitdata(data, predictions):
 	
 	return elastic, plastic
 	
+# takes the derivative of model
 def get_slopes(model):
     
     strain = model[:,0]
