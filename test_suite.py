@@ -21,6 +21,47 @@ import timeit
 from memory_profiler import memory_usage
 from pybrain.optimization import GA
 
+# returns the model after any readings greater than 0.025, any smaller are considered noise/error-prone
+def delete_noise(model,cutoff = 0.025):
+	
+	cur_index = 0
+
+	# deleting noisy values (possible inaccuracies up to .025 by default)
+	for index, num in enumerate(model[:,0]):
+		
+		if num >= cutoff: 
+			 return model[index:]	
+			 
+# makes all values positive in order to be able to take logs
+def adjust(model):
+	
+	for index, num in enumerate(model[:,1]):
+		
+		if num<=0:
+			model[index,1] = 1
+		
+	return model
+
+# creates a linear model based on data and predicts its values over the domain
+def predictlinear(data, step = 0.5):
+	
+	est = linfit(data)
+	x_pred = np.arange(min(data[:,0]),max(data[:,0]+1), step)
+	y_pred = est.predict(x_pred[:,None])
+	
+	return combine_data(x_pred,y_pred)
+
+# given a function and an interval (two-element list) and a number of points, applies it to the function and gets some sample points
+def samplepoints(function, interval, numpoints):
+
+	x_dom = np.linspace(interval[0],interval[1],numpoints)
+	y_range = np.zeros(numpoints)
+	
+	for index, point in enumerate(x_dom):
+		y_range[index] = function(point)
+		
+	return combine_data(x_dom,y_range)
+
 # fits a linear regression to the data and returns it
 def linfit(data, start=None):
 

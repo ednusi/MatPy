@@ -120,11 +120,11 @@ def plotmult2D(data1, data2, xtitle='', ytitle='', title='', marker1='b^', marke
 	ax.set_ylabel(ytitle)
 	ax.set_title(title)
 	
-	x_min = min(min(data1[:,0]),min(data2[:,0]))
-	y_min = min(min(data1[:,1]),min(data2[:,1]))
+	x_min = min((min(data1[:,0]),min(data2[:,0])))
+	y_min = min((min(data1[:,1]),min(data2[:,1])))
 	
-	x_max = max(max(data1[:,0]),max(data2[:,0]))
-	y_max = max(max(data1[:,1]),max(data2[:,1]))
+	x_max = max((max(data1[:,0]),max(data2[:,0])))
+	y_max = max((max(data1[:,1]),max(data2[:,1])))
 	
 	plot.xlim(x_min,x_max*1.05)
 	plot.ylim(y_min,y_max*1.05)
