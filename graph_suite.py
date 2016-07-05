@@ -106,7 +106,7 @@ def plot2D(data, xtitle='', ytitle='', title='', marker='b-'):
 	
 	
 # expecting two sets of data with x data in first col and y data in second col
-def plotmult2D(data1, data2, xtitle='', ytitle='', title='', marker1='b^', marker2='r^'):
+def plotmult2D(data1, data2, xtitle='', ytitle='', title='', marker1='b-', marker2='r^'):
 	
 	# default font size
 	matplotlib.rcParams.update({'font.size': 16}) 

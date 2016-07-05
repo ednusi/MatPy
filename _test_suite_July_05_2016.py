@@ -55,7 +55,6 @@ def midpoint(lst):
 
 # clusters the data into groups and returns the split data
 def kmeanssplit(data, numclusters=2):
-	
 	return splitdata(data,kcluster(data,numclusters=numclusters).predict(data[:,0][:,None]))
 
 # creates a linear model based on data and predicts its values over the domain
@@ -163,68 +162,63 @@ def expToTrain(exp,start=None):
 	
 	return x_train
 	
-# finds the yield stress of a dataset automatically using kmeans clustering and covariance analysis
+# finds the yield stress of a dataset automatically
 def yield_stress(model, numpoints=1000, cutoff=0.025, startx=None, endx=None):
+	
+	"""Default interval values"""
+	if startx is None:
+		startx=min(model[:,0])+0.1
+	
+	if endx is None:
+		endx=max(model[:,0])
+	
+	model = delete_noise(model,cutoff=cutoff)
+	model = adjust(model)
 
-    """Default interval values"""
-    if startx is None:
-        startx=min(model[:,0])+0.1
+	"""a and c are parameters"""
+	def fit(x, a,c):
+		return a*np.log(x)+c
 
-    if endx is None:
-        endx=max(model[:,0])
+	strain = model[:,0]
+	stress = model[:,1]
 
-    model = delete_noise(model,cutoff=cutoff)
-    model = adjust(model)
+	optimal_params, cov_matrix = curve_fit(fit,strain,stress)
 
-    """a and c are parameters"""
-    def fit(x, a,c):
-        return a*np.log(x)+c
+	a, c = optimal_params
 
-    strain = model[:,0]
-    stress = model[:,1]
+	"""The fitted version of the dataset"""
+	def bestfit(x):
+		return a*np.log(x)+c
 
-    optimal_params, cov_matrix = curve_fit(fit,strain,stress)
+	"""We look for the place where the slope is average over the dataset"""
+	gap_len = (endx-startx)/numpoints
 
-    a, c = optimal_params
+	xs = np.linspace(startx,endx,numpoints)
+	ys = bestfit(xs)
 
-    """The fitted version of the dataset"""
-    def bestfit(x):
-        return a*np.log(x)+c
+	pred_data = combine_data(xs,ys)
+	pred_slope = get_slopes(pred_data)
+		
+	ave_slope = (stress[-1]-stress[0])/(strain[-1]-strain[0])
 
-    """We look for the place where the slope is average over the dataset"""
-    gap_len = (endx-startx)/numpoints
+	"""As soon as the slope at a point is less than the average slope, we stop"""
+	for ind, slope in enumerate(pred_slope):
+		
+		if slope<ave_slope:
+			break
 
-    xs = np.linspace(startx,endx,numpoints)
-    ys = bestfit(xs)
+	"""
+	We must take into account that we may not have a 
+	data point in the experimental set where we have found a result
+	"""
+	datapointind = ind*gap_len
 
-    pred_data = combine_data(xs,ys)
-    pred_slope = get_slopes(pred_data)
-
-    """Defining average slope by observing clusters in data"""
-    left, right = kmeanssplit(model)
-    leftmid, rightmid = midpoint(left)[None,:], midpoint(right)[None,:]
-    
-    ave_slope = (rightmid[0,1]-leftmid[0,1])/(rightmid[0,0]-leftmid[0,0])
-
-    
-    """As soon as the slope at a point is less than the average slope, we stop"""
-    for ind, slope in enumerate(pred_slope):
-
-        if slope<ave_slope:
-            break
-
-    """
-    We must take into account that we may not have a 
-    data point in the experimental set where we have found a result
-    """
-    datapointind = ind*gap_len
-
-    for ind, stra in enumerate(model[:,0]):
-
-        if stra > datapointind:
-            return model[ind][None,:]
-
-    raise ValueError("The data does not seem to have a yield")
+	for ind, stra in enumerate(model[:,0]):
+		
+		if stra > datapointind:
+			return model[ind][None,:]
+			
+	raise ValueError("The data does not seem to have a yield")
       
 # takes specific methods provided by scipy.optimize
 def minimize_suite(function, methods, guess):
