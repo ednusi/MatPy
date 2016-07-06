@@ -1,7 +1,7 @@
 """
 graph_suite.py
 
-Contains all functionality needed to plot functions.
+Contains all functionality needed to plot functions easily.
 06-27-16
 
 -Edward Nusinovich
@@ -120,45 +120,21 @@ def plotmult2D(data1, data2, xtitle='', ytitle='', title='', marker1='b-', marke
 	ax.set_ylabel(ytitle)
 	ax.set_title(title)
 	
+	# ensuring that data is visible on the plot
 	x_min = min((min(data1[:,0]),min(data2[:,0])))
 	y_min = min((min(data1[:,1]),min(data2[:,1])))
 	
 	x_max = max((max(data1[:,0]),max(data2[:,0])))
 	y_max = max((max(data1[:,1]),max(data2[:,1])))
 	
-	plot.xlim(x_min,x_max*1.05)
-	plot.ylim(y_min,y_max*1.05)
+	# (UNCOMMENT TO VIEW ALL DATA)
+	#plot.xlim(x_min,x_max*1.05)
+	#plot.ylim(y_min,y_max*1.05)
+
+	# (UNCOMMENT TO VIEW ALL POSITIVE DATA)
+	plot.xlim(0,x_max*1.05)
+	plot.ylim(0,y_max*1.05)
 
 	ax.grid(True)
 	fig.tight_layout()
 	plot.show()
-
-     	 
-"""
-# (DEPRECATED -- USE PLOTMULT2D)
-# conveniently creates a plot with the attributes given to compare to experimental data
-def plotExperimental2D(comp,xtitle,ytitle,xscale,yscale):
-	
-	global exp
-	exp = []                           # ***** target 
-	exp = np.loadtxt('ref/HSRS/22')
-
-	fig, ax = plot.subplots(figsize=(9,6))
-
-	ax.plot(comp[:,0],comp[:,1],lw=3)
-	ax.plot(exp[:,0], exp[:,1],'o',zorder=5,markevery=5)
-
-	ax.set_xlabel(xtitle, fontsize=35, labelpad=15)
-	ax.set_ylabel(ytitle, fontsize=35, labelpad=15)
-	ax.tick_params(axis='x', labelsize=25, pad = 10)
-	ax.tick_params(axis='y', labelsize=25, pad = 10)
-
-	# we maintain only positive x&y values
-	ax.set_xscale(xscale, nonposx='clip')
-	ax.set_yscale(yscale, nonposx='clip')
-	
-	ax.set_xlim(0,exp[-1,0]+1) # margin
-	ax.grid(True)
-	fig.tight_layout()
-	plot.show()
-"""
