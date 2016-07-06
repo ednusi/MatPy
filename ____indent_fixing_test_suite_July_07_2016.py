@@ -168,13 +168,17 @@ def expToTrain(exp,start=None):
 # finds the yield stress of a dataset automatically using kmeans clustering and covariance analysis
 def yield_stress(model, numpoints=1000, cutoff=0.025, startx=None, endx=None, decreasingend=False):
 
+    """WARNING IF CUTOFF IS HIGH (CAN BE ARBITRARILY CHANGED)"""
+    if cutoff>0.2:
+        warnings.warn("Your cutoff may be too high for the dataset") 
+
     """Default interval values"""
     if startx is None:
         startx=min(model[:,0])+0.1
+
     if endx is None:
         endx=max(model[:,0])
 
-    """We get rid of the noise in the data, and select only positive values (so that logarithms can be taken)"""
     model = delete_noise(model,cutoff=cutoff)
     model = adjust(model)
 
@@ -185,18 +189,15 @@ def yield_stress(model, numpoints=1000, cutoff=0.025, startx=None, endx=None, de
     strain = model[:,0]
     stress = model[:,1]
 
-    """We are fitting a logarithmic curve as closely as possible to the dataset"""
     optimal_params, cov_matrix = curve_fit(fit,strain,stress)
+
     a, c = optimal_params
 
     """The fitted version of the dataset"""
     def bestfit(x):
         return a*np.log(x)+c
 
-    """
-    We look for the place where the slope is average over
-    the domain by taking sample points of the logarithmic curve
-    """
+    """We look for the place where the slope is average over the dataset"""
     gap_len = (endx-startx)/numpoints
 
     xs = np.linspace(startx,endx,numpoints)
@@ -221,6 +222,7 @@ def yield_stress(model, numpoints=1000, cutoff=0.025, startx=None, endx=None, de
     
     """As soon as the slope at a point is less than the average slope, we stop"""
     for ind, slope in enumerate(pred_slope):
+
         if slope<ave_slope:
             break
 
@@ -231,7 +233,6 @@ def yield_stress(model, numpoints=1000, cutoff=0.025, startx=None, endx=None, de
     """
     datapointind = ind*gap_len
 
-    """Here we find the nearest neighbor in the dataset"""
     for ind, stra in enumerate(model[:,0]):
 
         if stra > datapointind:
