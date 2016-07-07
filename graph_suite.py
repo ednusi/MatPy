@@ -2,7 +2,12 @@
 graph_suite.py
 
 Contains all functionality needed to plot functions easily.
-06-27-16
+Uses pyplot from matplotlib.
+
+IntervalPlot3D -- takes a function in R3, an x domain, and a y domain, and plots the function at all points on those domains.
+barGraph -- takes some data points and plots them as a series of bars, with optionally specifiable tick labels.
+plot2D -- takes a set of data with two columns and plots the data, where markers for the data set can be specified.
+plotmult2D -- takes two data sets and plots each, where each data set is like the input for plot2D.
 
 -Edward Nusinovich
 """
@@ -12,6 +17,19 @@ from matplotlib import pyplot as plot
 matplotlib.rcParams.update({'font.size': 16}) # default font size
 
 def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",title="",fontsize=14):
+"""
+Plots a function over a given domain, allowing the user to provide labels for the axes.
+
+Requires a user to provide a function, and x_domain, and a y_domain.
+Keyword args:
+	-- The three labels for the axes
+	xlabel
+	ylabel
+	zlabel
+	-- 
+	title - The title of the chart
+	fontsize - Override the default font size, which is 14
+"""
 
     fig = plot.figure()
     ax = fig.gca(projection='3d')
@@ -21,6 +39,7 @@ def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",t
     x = np.zeros(0)
     y = np.zeros(0)
 
+	# evenly traverses the entire domain and adds all points to the list of points to be evaluated
     for y_val in y_domain:
 
         x = np.append(x,x_domain)
@@ -45,6 +64,12 @@ def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",t
     plot.show()
     
 def barGraph(data, ylabel='', title='', xticklabels=None):
+"""
+Displays all of the data points in data as a series of bars.
+
+Optionally a user can provide a label for the y-axis, a title, and
+tick labels for the bars.
+"""
 
 	N = len(data) # Number of data points
 		
@@ -66,15 +91,19 @@ def barGraph(data, ylabel='', title='', xticklabels=None):
 
 	# puts graph labels above bars
 	def autolabel(rects):
+
 		# attach some text labels
 		for index, rect in enumerate(rects):
 			
 			height = rect.get_height()
 			
+			# special case for data that is not found
 			if data[index] == -1.0:
 				ax.text(rect.get_x() + offset, 1.01*height,
 					'Not given\n by algorithm',
 					ha='center', va='bottom')
+
+			# labels all of the data 
 			else:    
 				ax.text(rect.get_x() + offset, 1.01*height,
 					'%d' % int(height),
@@ -84,8 +113,13 @@ def barGraph(data, ylabel='', title='', xticklabels=None):
 	plot.ylim(0,max(data)*1.5) # enforces limits on axis range
 	plot.show()
 	
-# expecting a set of x data in first col and y data in second col
 def plot2D(data, xtitle='', ytitle='', title='', marker='b-'):
+"""
+Takes two columns for data, and plots it.
+
+Keyword arguments (optional):
+	axes titles, plot title, and marker (uses pyplot's standard markers)
+"""
 	
 	# default font size
 	matplotlib.rcParams.update({'font.size': 16}) 
@@ -97,6 +131,7 @@ def plot2D(data, xtitle='', ytitle='', title='', marker='b-'):
 	ax.set_ylabel(ytitle)
 	ax.set_title(title)
 	
+	# set the limits to entire domain and range
 	plot.xlim(min(data[:,0]),max(data[:,0])*1.05)
 	plot.ylim(min(data[:,1]),max(data[:,1])*1.05)
 
@@ -105,8 +140,16 @@ def plot2D(data, xtitle='', ytitle='', title='', marker='b-'):
 	plot.show()
 	
 	
-# expecting two sets of data with x data in first col and y data in second col
 def plotmult2D(data1, data2, xtitle='', ytitle='', title='', marker1='b-', marker2='r^'):
+"""
+Similar to plot2D, but plots 2 data sets.
+
+Takes two datasets, each consisting of two columns.
+Keyword arguments (optional):
+	axes labels
+	plot title
+	markers
+"""
 	
 	# default font size
 	matplotlib.rcParams.update({'font.size': 16}) 

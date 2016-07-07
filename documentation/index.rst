@@ -12,9 +12,9 @@ Contents:
    :maxdepth: 2
    
    Introduction
-   Test Module
-   Graph Module
-
+   Material Analytics
+   Optimization Suite
+   Graph Suite
 
 
 Indices and tables

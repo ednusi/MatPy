@@ -10,7 +10,11 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-
+   
+   Introduction
+   Material Analytics
+   Optimization Suite
+   Graph Suite
 
 
 Indices and tables

@@ -2,7 +2,12 @@
 graph_suite.py
 
 Contains all functionality needed to plot functions easily.
-06-27-16
+Uses pyplot from matplotlib.
+
+IntervalPlot3D -- takes a function in R3, an x domain, and a y domain, and plots the function at all points on those domains.
+barGraph -- takes some data points and plots them as a series of bars, with optionally specifiable tick labels.
+plot2D -- takes a set of data with two columns and plots the data, where markers for the data set can be specified.
+plotmult2D -- takes two data sets and plots each, where each data set is like the input for plot2D.
 
 -Edward Nusinovich
 """
@@ -12,6 +17,7 @@ from matplotlib import pyplot as plot
 matplotlib.rcParams.update({'font.size': 16}) # default font size
 
 def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",title="",fontsize=14):
+"""Plots a function over a given domain, allowing the user to provide labels for the axes."""
 
     fig = plot.figure()
     ax = fig.gca(projection='3d')
@@ -45,6 +51,11 @@ def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",t
     plot.show()
     
 def barGraph(data, ylabel='', title='', xticklabels=None):
+"""
+Displays all of the data points in data as a series of bars
+and automatically labels the horizontal axis with the values 
+associated with them.
+"""
 
 	N = len(data) # Number of data points
 		
