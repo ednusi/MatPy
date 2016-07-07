@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Material Analytics &mdash; Intelligent Material Parameter Observation 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Intelligent Material Parameter Observation 0.1 documentation" href="index.html" />
+    <link rel="next" title="Optimization Suite" href="Optimization Suite.html" />
+    <link rel="prev" title="Introduction" href="Introduction.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-material_analytics"></span><div class="section" id="material-analytics">
+<h1>Material Analytics<a class="headerlink" href="#material-analytics" title="Permalink to this headline">¶</a></h1>
+<p>Contains all functionality needed to
+<strong>automatically determine the yield stress</strong>
+of a material (see <em>yield_stress()</em>), even with noisy data, given
+a stress-strain curve in the form
+[Strain|Stress] in each row.</p>
+<dl class="function">
+<dt id="material_analytics.adjust">
+<code class="descclassname">material_analytics.</code><code class="descname">adjust</code><span class="sig-paren">(</span><em>model</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.adjust" title="Permalink to this definition">¶</a></dt>
+<dd><p>Written for convenience because
+it makes all values positive in
+order to be able to take logarithms.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.combine_data">
+<code class="descclassname">material_analytics.</code><code class="descname">combine_data</code><span class="sig-paren">(</span><em>data1</em>, <em>data2</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.combine_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given two arrays, returns a combined list where each element is <span class="math">\(x_i,y_i\)</span>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.delete_noise">
+<code class="descclassname">material_analytics.</code><code class="descname">delete_noise</code><span class="sig-paren">(</span><em>model</em>, <em>cutoff=0.025</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.delete_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an array (assuming it&#8217;s roughly sorted) and returns it after
+a certain value (cutoff), useful for removing early values which may
+contain high levels of noise.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.expToTrain">
+<code class="descclassname">material_analytics.</code><code class="descname">expToTrain</code><span class="sig-paren">(</span><em>exp</em>, <em>start=None</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.expToTrain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a bunch of individual domain values to lists, because each domain value must be iterable for training data.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.format_data">
+<code class="descclassname">material_analytics.</code><code class="descname">format_data</code><span class="sig-paren">(</span><em>data</em>, <em>start=None</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.format_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method will put data in the appropriate format for regression (Scikit-Learn).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.get_slopes">
+<code class="descclassname">material_analytics.</code><code class="descname">get_slopes</code><span class="sig-paren">(</span><em>model</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.get_slopes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes the approximate derivative of a two-column dataset by taking slopes between all of the points.</p>
+<p>The data should be formatted
+[x,y] for each row.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.kcluster">
+<code class="descclassname">material_analytics.</code><code class="descname">kcluster</code><span class="sig-paren">(</span><em>data</em>, <em>numclusters</em>, <em>start=None</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.kcluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clusters the data using regular kmeans clustering.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.kmeanssplit">
+<code class="descclassname">material_analytics.</code><code class="descname">kmeanssplit</code><span class="sig-paren">(</span><em>data</em>, <em>numclusters=2</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.kmeanssplit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clusters the data into groups (k-means) and returns the split data.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.kminicluster">
+<code class="descclassname">material_analytics.</code><code class="descname">kminicluster</code><span class="sig-paren">(</span><em>data</em>, <em>numclusters</em>, <em>start=None</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.kminicluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clusters the data using mini batch kmeans.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.linfit">
+<code class="descclassname">material_analytics.</code><code class="descname">linfit</code><span class="sig-paren">(</span><em>data</em>, <em>start=None</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.linfit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits a linear regression to the data and returns it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.midpoint">
+<code class="descclassname">material_analytics.</code><code class="descname">midpoint</code><span class="sig-paren">(</span><em>lst</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.midpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value that is halfway through the
+list (index-wise), left midpoint if
+there are an odd number of points.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.predictlinear">
+<code class="descclassname">material_analytics.</code><code class="descname">predictlinear</code><span class="sig-paren">(</span><em>data</em>, <em>step=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.predictlinear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a linear model based on data and predicts its values over the domain, returning the predictions.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.regularize">
+<code class="descclassname">material_analytics.</code><code class="descname">regularize</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.regularize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts every non-numerical list value to zero which is useful for analysis later.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.samplepoints">
+<code class="descclassname">material_analytics.</code><code class="descname">samplepoints</code><span class="sig-paren">(</span><em>function</em>, <em>interval</em>, <em>numpoints</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.samplepoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a function and an interval (two-element list) and a number of points, applies it to the function and gets sample points at even intervals.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.splitdata">
+<code class="descclassname">material_analytics.</code><code class="descname">splitdata</code><span class="sig-paren">(</span><em>data</em>, <em>predictions</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.splitdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes predictions from kmeans clustering and split the table into two groups.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.yield_stress">
+<code class="descclassname">material_analytics.</code><code class="descname">yield_stress</code><span class="sig-paren">(</span><em>model</em>, <em>numpoints=1000</em>, <em>cutoff=0.025</em>, <em>startx=None</em>, <em>endx=None</em>, <em>decreasingend=False</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.yield_stress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the yield stress of a dataset <strong>automatically</strong> using kmeans clustering and covariance analysis.</p>
+<p>In order to use this function, you just need to provide it with a stress/strain curve as a numpy array
+where the data is formatted as a two-column array. The first column is all of the stress values,
+and the second column is all of the strain values.</p>
+<p>This works by fitting a logarithmic model as closely as possible to the experimental data (to reduce noise)
+and then to analyze where the slope begins to be decrease relative to the average slope. In other words,
+where <span class="math">\(\partial \sigma/ \partial \epsilon &lt; (f(b)-f(a))/(b-a)\)</span> where a and b are the beginning and
+end of the interval, respectively.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Introduction.html" title="previous chapter">Introduction</a></li>
+      <li>Next: <a href="Optimization Suite.html" title="next chapter">Optimization Suite</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Material Analytics.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Edward Alexander Nusinovich.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/Material Analytics.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

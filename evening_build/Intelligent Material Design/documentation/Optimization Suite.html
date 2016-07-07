@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Optimization Suite &mdash; Intelligent Material Parameter Observation 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Intelligent Material Parameter Observation 0.1 documentation" href="index.html" />
+    <link rel="next" title="&lt;no title&gt;" href="Graph Suite.html" />
+    <link rel="prev" title="Material Analytics" href="Material Analytics.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-optimization_suite"></span><div class="section" id="optimization-suite">
+<h1>Optimization Suite<a class="headerlink" href="#optimization-suite" title="Permalink to this headline">¶</a></h1>
+<p>This contains methods to optimize functions using SciPy
+and evaluate the methods&#8217; performance in terms of memory,
+algorithmic iterations, and runtime.</p>
+<dl class="function">
+<dt id="optimization_suite.GA_minimize">
+<code class="descclassname">optimization_suite.</code><code class="descname">GA_minimize</code><span class="sig-paren">(</span><em>function</em>, <em>guess</em><span class="sig-paren">)</span><a class="headerlink" href="#optimization_suite.GA_minimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function runs the genetic algorithm from PyBrain (<a class="reference external" href="http://pybrain.org/docs/api/optimization/optimization.html">http://pybrain.org/docs/api/optimization/optimization.html</a>) on a function, provided with an initial guess.</p>
+<p>NOTE: Format is <strong>CRUCIAL</strong> here or this will not work (blame the authors of PyBrain, sorry):
+Function must take a <strong>TUPLE</strong> (<strong>EVEN</strong> if of only one element (in the form (a, )) and guess <strong>MUST BE A LIST</strong> (even if only with one element)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimization_suite.custom_minimize">
+<code class="descclassname">optimization_suite.</code><code class="descname">custom_minimize</code><span class="sig-paren">(</span><em>function</em>, <em>algorithm</em>, <em>bounds=None</em>, <em>guess=None</em><span class="sig-paren">)</span><a class="headerlink" href="#optimization_suite.custom_minimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is similar to the minimize_suite, but is defined for functions like basinhopping or brute_force (in scipy.optimize), so the second parameter is a user-provided algorithm for optimization.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>algorithm - has been tested with things like scipy.optimize.basinhopping, and bruteforce, but should work with a user-defined algorithm as well.</dd>
+<dt>Keyword Arguments:</dt>
+<dd>bounds - Limits the search domain
+guess - an initial guess at an optimal solution</dd>
+</dl>
+<p>Which keyword arguments are required or optional depends on the provided algorithm.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimization_suite.minimize_suite">
+<code class="descclassname">optimization_suite.</code><code class="descname">minimize_suite</code><span class="sig-paren">(</span><em>function</em>, <em>methods</em>, <em>guess</em><span class="sig-paren">)</span><a class="headerlink" href="#optimization_suite.minimize_suite" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method takes any method provided by <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html">http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html</a>.</p>
+<p>This method takes a function, strings representing the method to test it with, and an initial guess for the optimal solution.
+Every minimizer in this package is a local optimization algorithm, so it will get trapped in convexities of a dataset.
+In running, this function will display the amount of memory, the runtime, and the number of algorithmic iterations required to
+achieve an optimal result.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Material Analytics.html" title="previous chapter">Material Analytics</a></li>
+      <li>Next: <a href="Graph Suite.html" title="next chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Optimization Suite.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Edward Alexander Nusinovich.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/Optimization Suite.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
