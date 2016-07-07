@@ -1,7 +1,0 @@
-from distutils.core import setup
-
-setup(name='Intelligent Material Design',
-      version='0.5',
-      packages=['intelligent_materials',],
-      long_description=open('README.txt').read(),
-      )
