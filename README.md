@@ -1,3 +1,3 @@
 ## notebooks
 
-These notebooks contain some standardized methods for evaluating algorithms in their optimization of scalar-valued vector functions.
+Look at evening_build for the current version of the software.
