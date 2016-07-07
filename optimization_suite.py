@@ -1,12 +1,10 @@
 """
-optimization_suite.py
-07-06-2016
+Optimization Suite
+******************
 
 This contains methods to optimize functions using SciPy
 and evaluate the methods' performance in terms of memory,
 algorithmic iterations, and runtime. 
-
-Edward Alexander Nusinovich
 """
 
 """Basic libs"""
@@ -20,8 +18,15 @@ from pybrain.optimization import GA
 import timeit
 from memory_profiler import memory_usage
 
-# takes specific methods provided by scipy.optimize (Nelder-Mead, L-BFGS-B, CG, etc...)
 def minimize_suite(function, methods, guess):
+    """
+    This method takes any method provided by http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html.
+
+    This method takes a function, strings representing the method to test it with, and an initial guess for the optimal solution.
+    Every minimizer in this package is a local optimization algorithm, so it will get trapped in convexities of a dataset.
+    In running, this function will display the amount of memory, the runtime, and the number of algorithmic iterations required to
+    achieve an optimal result.
+    """
 
     start = np.zeros(0)
     stop = np.zeros(0)
@@ -68,8 +73,17 @@ def minimize_suite(function, methods, guess):
         print
 
 
-# For custom minimization methods in SciPy, like basinhopping, where the returned object provides more information
 def custom_minimize(function, algorithm, bounds = None, guess = None):
+    """
+    This is similar to the minimize_suite, but is defined for functions like basinhopping or brute_force (in scipy.optimize), so the second parameter is a user-provided algorithm for optimization.
+
+    Arguments:
+        algorithm - has been tested with things like scipy.optimize.basinhopping, and bruteforce, but should work with a user-defined algorithm as well.
+    Keyword Arguments:
+        bounds - Limits the search domain
+        guess - an initial guess at an optimal solution
+    Which keyword arguments are required or optional depends on the provided algorithm.
+    """
 
     most_mem = np.zeros(0)
 
@@ -106,11 +120,15 @@ def custom_minimize(function, algorithm, bounds = None, guess = None):
     print '{0} took {1} seconds. The result, {2} was found at ({3})'.format(algorithm.__name__,exec_time,result.fun,result.x)
     print '{0} used {1} megabytes and took {2} iterations'.format(algorithm.__name__,most_mem,num_iters)
     print
-    
-# Our workaround for evaluating GA performance, needs its own method because it is separate in the SciPy class and takes different parameters
-# FORMAT IS CRUCIAL HERE OR THIS WILL NOT WORK (NOT MY FAULT, BLAME THE AUTHORS OF PYBRAIN):
-# FUNCTION MUST TAKE A TUPLE (EVEN IF OF ONLY ONE ELEMENT) AND GUESS MUST BE A LIST (EVEN IF OF ONLY ONE ELEMENT)
+
+# Our workaround for evaluating GA performance, needs its own method because it is separate in the PyBrain module and takes different parameters
 def GA_minimize(function, guess):
+    """
+    This function runs the genetic algorithm from PyBrain (http://pybrain.org/docs/api/optimization/optimization.html) on a function, provided with an initial guess.
+
+    NOTE: Format is **CRUCIAL** here or this will not work (blame the authors of PyBrain, sorry):
+    Function must take a **TUPLE** (**EVEN** if of only one element (in the form (a, )) and guess **MUST BE A LIST** (even if only with one element)
+    """
     
     result = GA(function, guess, minimize=True) # set to minimize by default
     

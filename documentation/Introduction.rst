@@ -3,8 +3,9 @@ Introduction
 
 Thank you for deciding to check out this library!
 
-This is a bunch of modules that will be combined to a package soon.
-They are created for effective and speedy **materials analysis**.
+This package is designed for effective and speedy **materials analysis**.
+
+To get started, import the intelligent_materials package and ensure that you have all of the necessary dependencies. A full-fledged dependency package is coming soon.
 
 Included are:
 Graph Suite (graph_suite.py), Material Analytics (material_analytics.py), and Optimization Suite (optimization_suite.py).
