@@ -150,6 +150,25 @@ def kmeanssplit(data, numclusters=2):
     
     return splitdata(data,kcluster(data,numclusters=numclusters).predict(data[:,0][:,None]))
 
+def splitdata(data, predictions):
+    """Takes predictions from kmeans clustering and split the table into two groups."""
+    
+    initgroup = predictions[0]
+    splitgroup = 0
+
+    for index, val in enumerate(predictions):
+        
+        # as soon as we reach the new group, we have found our dividing point
+        if val != initgroup:
+            splitgroup = index
+            break
+        
+    """Instead of creating tuples, we create lists"""
+    elastic = combine_data(data[:splitgroup,0],data[:splitgroup,1]) 
+    plastic = combine_data(data[splitgroup:,0],data[splitgroup:,1])
+    
+    return elastic, plastic
+
 def predictlinear(data, step = 0.5):
     """Creates a linear model based on data and predicts its values over the domain, returning the predictions."""
     
@@ -163,12 +182,7 @@ def samplepoints(function, interval, numpoints):
     """Given a function and an interval (two-element list) and a number of points, applies it to the function and gets sample points at even intervals."""
 
     x_dom = np.linspace(interval[0],interval[1],numpoints)
-    y_range = np.zeros(numpoints)
-    
-    for index, point in enumerate(x_dom):
-        y_range[index] = function(point)
-        
-    return combine_data(x_dom,y_range)
+    return combine_data(x_dom,function(x_dom))
 
 def linfit(data, start=None):
     """Fits a linear regression to the data and returns it."""
@@ -203,25 +217,6 @@ def regularize(data):
             data[index]=0
         
     return data
-
-def splitdata(data, predictions):
-    """Takes predictions from kmeans clustering and split the table into two groups."""
-    
-    initgroup = predictions[0]
-    splitgroup = 0
-
-    for index, val in enumerate(predictions):
-        
-        # as soon as we reach the new group, we have found our dividing point
-        if val != initgroup:
-            splitgroup = index
-            break
-        
-    """Instead of creating tuples, we create lists"""
-    elastic = combine_data(data[:splitgroup,0],data[:splitgroup,1]) 
-    plastic = combine_data(data[splitgroup:,0],data[splitgroup:,1])
-    
-    return elastic, plastic
     
 def get_slopes(model):
     """
