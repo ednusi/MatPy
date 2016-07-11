@@ -15,4 +15,4 @@ Permission to use this data is contingent upon your acceptance of the terms of t
 
 Copyright Protection for NIST Standard Reference Data (SRD)
 
-Copyright protection on this compilation of data has been secured by the U.S. Department of Commerce in the United States and in other countries that are parties to the Universal Copyright Convention, pursuant to Section 290(e) of Title 15 of the United States Code. NIST Standard Reference Data (SRD); ©Copyright ©2013 by the U.S. Secretary of Commerce on behalf of the United States of America. All rights reserved.
+Copyright protection on this compilation of data has been secured by the U.S. Department of Commerce in the United States and in other countries that are parties to the Universal Copyright Convention, pursuant to Section 290(e) of Title 15 of the United States Code. NIST Standard Reference Data (SRD); ©Copyright by the U.S. Secretary of Commerce on behalf of the United States of America. All rights reserved.

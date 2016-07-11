@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Stress-Strain Data Parser &mdash; Intelligent Material Parameter Observation 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Intelligent Material Parameter Observation 0.1 documentation" href="index.html" />
+    <link rel="next" title="Material Analytics" href="Material Analytics.html" />
+    <link rel="prev" title="Introduction" href="Introduction.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-model"></span><div class="section" id="stress-strain-data-parser">
+<h1>Stress-Strain Data Parser<a class="headerlink" href="#stress-strain-data-parser" title="Permalink to this headline">¶</a></h1>
+<p>Given a file containing experimental stress-strain
+data, this class parses it and turns it into a
+numpy array.</p>
+<p>If the data is in a text file, it just needs
+to be two columns, the first one strain, and
+the second one stress.</p>
+<p>If the data is in an XML file, it should have
+a stressStrain tag where the relevant data begins
+and then rows and columns with data as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">headers</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;1&quot;</span><span class="o">&gt;</span><span class="k">True</span> <span class="n">Strain</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;2&quot;</span><span class="o">&gt;</span><span class="k">True</span> <span class="n">Stress</span> <span class="p">[</span><span class="n">MPa</span><span class="p">]</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;3&quot;</span><span class="o">&gt;</span><span class="k">True</span> <span class="n">Strain</span> <span class="n">Rate</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="n">s</span><span class="p">]</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">headers</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">rows</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">row</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;1&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;1&quot;</span><span class="o">&gt;</span><span class="mf">0.000303349228225</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;2&quot;</span><span class="o">&gt;-</span><span class="mf">10.3437455647</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;3&quot;</span><span class="o">&gt;</span><span class="mf">0.0</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
+    <span class="o">&lt;/</span><span class="n">row</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">row</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;2&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;1&quot;</span><span class="o">&gt;</span><span class="mf">4.86122562637e-06</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;2&quot;</span><span class="o">&gt;</span><span class="mf">9.89667339963</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;3&quot;</span><span class="o">&gt;-</span><span class="mf">596.976005197</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
+    <span class="o">&lt;/</span><span class="n">row</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">rows</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="model.stress_strain">
+<em class="property">class </em><code class="descclassname">model.</code><code class="descname">stress_strain</code><span class="sig-paren">(</span><em>data_file</em>, <em>type='txt'</em><span class="sig-paren">)</span><a class="headerlink" href="#model.stress_strain" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class will contain the relevant data from a file</p>
+<p>For the constructor:
+Takes in a file name, by default assuming it&#8217;s a text file.</p>
+<p>data_file is the name of the file with the data
+(must be in your directory).</p>
+<p>Include the full file name, with the extension
+(if applicable).
+If you wish to parse an xml file, specify type=&#8221;xml&#8221;
+as a keyword argument.</p>
+<dl class="method">
+<dt id="model.stress_strain.get_experimental_data">
+<code class="descname">get_experimental_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#model.stress_strain.get_experimental_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns experimental data gathered from initialization.</p>
+<p>If you are using the other methods in this package to
+automatically determine yield stress, call this method after
+creating an instance of this class to be able to use the
+data with those methods.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Introduction.html" title="previous chapter">Introduction</a></li>
+      <li>Next: <a href="Material Analytics.html" title="next chapter">Material Analytics</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Model.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Edward Alexander Nusinovich.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/Model.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

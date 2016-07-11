@@ -20,7 +20,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.cluster import MiniBatchKMeans as mbkmeans
 from sklearn.cluster import KMeans
 
-def yield_stress(model, numpoints=1000, cutoff=0.025, startx=None, endx=None, decreasingend=False):
+def yield_stress(model, numpoints=1000, cutoff=0.05, startx=None, endx=None, decreasingend=False):
     """
     Finds the yield stress of a dataset **automatically** using kmeans clustering and covariance analysis.
 
@@ -31,7 +31,8 @@ def yield_stress(model, numpoints=1000, cutoff=0.025, startx=None, endx=None, de
     This works by fitting a logarithmic model as closely as possible to the experimental data (to reduce noise)
     and then to analyze where the slope begins to be decrease relative to the average slope. In other words,
     where :math:`\partial \sigma/ \partial \epsilon < (f(b)-f(a))/(b-a)` where a and b are the beginning and
-    end of the interval, respectively.
+    end of the interval, respectively. For the purposes of this method, it is important that we have data up
+    until the point of failure of a given material.
     """
 
     """Default interval values"""
@@ -45,7 +46,7 @@ def yield_stress(model, numpoints=1000, cutoff=0.025, startx=None, endx=None, de
     model = adjust(model)
 
     """a and c are parameters"""
-    def fit(x, a,c):
+    def fit(x, a, c):
         return a*np.log(x)+c
 
     strain = model[:,0]
@@ -55,7 +56,7 @@ def yield_stress(model, numpoints=1000, cutoff=0.025, startx=None, endx=None, de
     optimal_params, cov_matrix = curve_fit(fit,strain,stress)
     a, c = optimal_params
 
-    """The fitted version of the dataset"""
+    """The fitted version of the fit function"""
     def bestfit(x):
         return a*np.log(x)+c
 
@@ -83,7 +84,7 @@ def yield_stress(model, numpoints=1000, cutoff=0.025, startx=None, endx=None, de
             
     else:
         """Otherwise, we get the slope over the whole interval to find where slope begins to decrease overall"""    
-        ave_slope = (stress[-1]-stress[0])/(strain[-1]-strain[0])
+        ave_slope = (ys[-1]-ys[0])/(xs[-1]-xs[0])
     
     """As soon as the slope at a point is less than the average slope, we stop"""
     for ind, slope in enumerate(pred_slope):
@@ -114,7 +115,7 @@ def delete_noise(model,cutoff = 0.025):
 
     cur_index = 0
 
-    # deleting noisy values (possible inaccuracies up to .025 by default)
+    # deleting noisy values (possible inaccuracies up to .025 in the strain by default)
     for index, num in enumerate(model[:,0]):
         
         if num >= cutoff: 
@@ -150,6 +151,25 @@ def kmeanssplit(data, numclusters=2):
     
     return splitdata(data,kcluster(data,numclusters=numclusters).predict(data[:,0][:,None]))
 
+def splitdata(data, predictions):
+    """Takes predictions from kmeans clustering and split the table into two groups."""
+    
+    initgroup = predictions[0]
+    splitgroup = 0
+
+    for index, val in enumerate(predictions):
+        
+        # as soon as we reach the new group, we have found our dividing point
+        if val != initgroup:
+            splitgroup = index
+            break
+        
+    """Instead of creating tuples, we create lists"""
+    elastic = combine_data(data[:splitgroup,0],data[:splitgroup,1]) 
+    plastic = combine_data(data[splitgroup:,0],data[splitgroup:,1])
+    
+    return elastic, plastic
+
 def predictlinear(data, step = 0.5):
     """Creates a linear model based on data and predicts its values over the domain, returning the predictions."""
     
@@ -163,12 +183,7 @@ def samplepoints(function, interval, numpoints):
     """Given a function and an interval (two-element list) and a number of points, applies it to the function and gets sample points at even intervals."""
 
     x_dom = np.linspace(interval[0],interval[1],numpoints)
-    y_range = np.zeros(numpoints)
-    
-    for index, point in enumerate(x_dom):
-        y_range[index] = function(point)
-        
-    return combine_data(x_dom,y_range)
+    return combine_data(x_dom,function(x_dom))
 
 def linfit(data, start=None):
     """Fits a linear regression to the data and returns it."""
@@ -203,25 +218,6 @@ def regularize(data):
             data[index]=0
         
     return data
-
-def splitdata(data, predictions):
-    """Takes predictions from kmeans clustering and split the table into two groups."""
-    
-    initgroup = predictions[0]
-    splitgroup = 0
-
-    for index, val in enumerate(predictions):
-        
-        # as soon as we reach the new group, we have found our dividing point
-        if val != initgroup:
-            splitgroup = index
-            break
-        
-    """Instead of creating tuples, we create lists"""
-    elastic = combine_data(data[:splitgroup,0],data[:splitgroup,1]) 
-    plastic = combine_data(data[splitgroup:,0],data[splitgroup:,1])
-    
-    return elastic, plastic
     
 def get_slopes(model):
     """

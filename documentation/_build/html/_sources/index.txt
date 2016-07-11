@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
    
    Introduction
+   Model
    Material Analytics
    Optimization Suite
    Graph Suite

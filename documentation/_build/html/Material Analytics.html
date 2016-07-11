@@ -26,7 +26,7 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Intelligent Material Parameter Observation 0.1 documentation" href="index.html" />
     <link rel="next" title="Optimization Suite" href="Optimization Suite.html" />
-    <link rel="prev" title="Introduction" href="Introduction.html" />
+    <link rel="prev" title="Stress-Strain Data Parser" href="Model.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -146,7 +146,7 @@ there are an odd number of points.</p>
 
 <dl class="function">
 <dt id="material_analytics.yield_stress">
-<code class="descclassname">material_analytics.</code><code class="descname">yield_stress</code><span class="sig-paren">(</span><em>model</em>, <em>numpoints=1000</em>, <em>cutoff=0.025</em>, <em>startx=None</em>, <em>endx=None</em>, <em>decreasingend=False</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.yield_stress" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">material_analytics.</code><code class="descname">yield_stress</code><span class="sig-paren">(</span><em>model</em>, <em>numpoints=1000</em>, <em>cutoff=0.05</em>, <em>startx=None</em>, <em>endx=None</em>, <em>decreasingend=False</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.yield_stress" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds the yield stress of a dataset <strong>automatically</strong> using kmeans clustering and covariance analysis.</p>
 <p>In order to use this function, you just need to provide it with a stress/strain curve as a numpy array
 where the data is formatted as a two-column array. The first column is all of the stress values,
@@ -154,7 +154,8 @@ and the second column is all of the strain values.</p>
 <p>This works by fitting a logarithmic model as closely as possible to the experimental data (to reduce noise)
 and then to analyze where the slope begins to be decrease relative to the average slope. In other words,
 where <span class="math">\(\partial \sigma/ \partial \epsilon &lt; (f(b)-f(a))/(b-a)\)</span> where a and b are the beginning and
-end of the interval, respectively.</p>
+end of the interval, respectively. For the purposes of this method, it is important that we have data up
+until the point of failure of a given material.</p>
 </dd></dl>
 
 </div>
@@ -168,7 +169,7 @@ end of the interval, respectively.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="Introduction.html" title="previous chapter">Introduction</a></li>
+      <li>Previous: <a href="Model.html" title="previous chapter">Stress-Strain Data Parser</a></li>
       <li>Next: <a href="Optimization Suite.html" title="next chapter">Optimization Suite</a></li>
   </ul></li>
 </ul>

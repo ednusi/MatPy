@@ -59,6 +59,7 @@ class StressStrain:
 		return ((sum_of_squares/len(errors))**(1./2.)) #incorporated division by n, which is the proper rms 
 
 	# looks at mechanical properties of material based on the physical model and experimental parameters
+	# minimizes difference between experimental data and physical model
 	def mcfunc(self, model_parameters):
 		
 		no_samples = 1
