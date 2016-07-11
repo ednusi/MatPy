@@ -6,5 +6,4 @@ Get started with **index.html** in the html folder.
 To my understanding, there are no tools currently available to automatically determine the yield stress of a material. 
 This is a huge drawback for large datasets, and so the **yield_stress()** function seeks to create a universal tool to do so, using regression analysis.
 
--*Edward Nusinovich* \n
- *July 7th, 2016*
+-*Edward Nusinovich, July 7th, 2016*
