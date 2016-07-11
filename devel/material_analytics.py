@@ -20,7 +20,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.cluster import MiniBatchKMeans as mbkmeans
 from sklearn.cluster import KMeans
 
-def yield_stress(model, numpoints=1000, cutoff=0.1, startx=None, endx=None, decreasingend=False):
+def yield_stress(model, numpoints=1000, cutoff=0.05, startx=None, endx=None, decreasingend=False):
     """
     Finds the yield stress of a dataset **automatically** using kmeans clustering and covariance analysis.
 
@@ -31,7 +31,8 @@ def yield_stress(model, numpoints=1000, cutoff=0.1, startx=None, endx=None, decr
     This works by fitting a logarithmic model as closely as possible to the experimental data (to reduce noise)
     and then to analyze where the slope begins to be decrease relative to the average slope. In other words,
     where :math:`\partial \sigma/ \partial \epsilon < (f(b)-f(a))/(b-a)` where a and b are the beginning and
-    end of the interval, respectively.
+    end of the interval, respectively. For the purposes of this method, it is important that we have data up
+    until the point of failure of a given material.
     """
 
     """Default interval values"""
@@ -55,7 +56,7 @@ def yield_stress(model, numpoints=1000, cutoff=0.1, startx=None, endx=None, decr
     optimal_params, cov_matrix = curve_fit(fit,strain,stress)
     a, c = optimal_params
 
-    """The fitted version of the dataset"""
+    """The fitted version of the fit function"""
     def bestfit(x):
         return a*np.log(x)+c
 
@@ -83,7 +84,7 @@ def yield_stress(model, numpoints=1000, cutoff=0.1, startx=None, endx=None, decr
             
     else:
         """Otherwise, we get the slope over the whole interval to find where slope begins to decrease overall"""    
-        ave_slope = (stress[-1]-stress[0])/(strain[-1]-strain[0])
+        ave_slope = (ys[-1]-ys[0])/(xs[-1]-xs[0])
     
     """As soon as the slope at a point is less than the average slope, we stop"""
     for ind, slope in enumerate(pred_slope):
