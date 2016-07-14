@@ -1,9 +1,0 @@
-matplotlib
-numpy
-scipy
-math
-sklearn
-DataModelDict
-pybrain
-timeit
-memory_profiler
