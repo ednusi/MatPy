@@ -7,6 +7,9 @@ Contains all functionality needed to
 of a material (see *yield_stress()*), even with noisy data, given
 a stress-strain curve in the form
 [Strain|Stress] in each row.
+
+This works for alloys that exhibit the yield point
+phenomenon as well.
 """
 
 """Basic libs"""
@@ -42,23 +45,10 @@ def yield_stress(model, numpoints=1000, cutoff=0.05, startx=None, endx=None, dec
         endx=max(model[:,0])
 
     """We get rid of the noise in the data, and select only positive values (so that logarithms can be taken)"""
-    model = delete_noise(model,cutoff=cutoff)
-    model = adjust(model)
+    model = log_prep(model,cutoff = cutoff)
 
-    """a and c are parameters"""
-    def fit(x, a, c):
-        return a*np.log(x)+c
-
-    strain = model[:,0]
-    stress = model[:,1]
-
-    """We are fitting a logarithmic curve as closely as possible to the dataset"""
-    optimal_params, cov_matrix = curve_fit(fit,strain,stress)
-    a, c = optimal_params
-
-    """The fitted version of the fit function"""
-    def bestfit(x):
-        return a*np.log(x)+c
+    """Fitting a log function to our data, bestfit is that function"""
+    bestfit = log_approx(model)
 
     """
     We look for the place where the slope is average over
@@ -69,6 +59,7 @@ def yield_stress(model, numpoints=1000, cutoff=0.05, startx=None, endx=None, dec
     xs = np.linspace(startx,endx,numpoints)
     ys = bestfit(xs)
 
+    """Find the slope of sample points from our log curve"""
     pred_data = combine_data(xs,ys)
     pred_slope = get_slopes(pred_data)
 
@@ -104,7 +95,138 @@ def yield_stress(model, numpoints=1000, cutoff=0.05, startx=None, endx=None, dec
         if stra > datapointind:
             return model[ind][None,:]
 
-    raise ValueError("The data does not seem to have a yield")     
+    raise ValueError("The data does not seem to have a yield")
+    
+def predict_stress(data, strain):
+    """
+    Returns a two-element array with the strain value as the first
+    item, and the expected stress as the second.
+    
+    Given a dataset and a strain value, predicts what the stress will be at that point.
+    As the first parameter, data should be an array with a bunch of entries
+    [strain, stress]. 
+    The second parameter, strain should be the value for which you wish to estimate 
+    stress.
+    
+    This effectively constructs a physical model for the stress-strain 
+    behavior of any material on-the-fly.    
+    """
+    
+    yielding = yield_stress(data)[0]
+
+    """Finds the yield index"""
+    yield_index = 0
+    for index, point in enumerate(data):
+
+        if (point == yielding).all():
+            yield_index = index
+            break
+
+    """Separates data into plastic and elastic regions"""
+    elastic = data[:yield_index+1]
+    plastic = data[yield_index+1:]
+
+    """
+    Finds the upper yield point (lower yield point is the *yielding* variable). 
+    We're taking the first element ([0]) because it returns the 
+    first element that meets the criteria in parentheses.
+    
+    It's a two-dimensional array so we have to do this twice.
+    """
+    upperyieldpoint_index = np.where(elastic==max(elastic[:,1]))[0][0]
+    upperyieldpoint = elastic[upperyieldpoint_index]
+
+    """We estimate the region until the first upper yield point with a linear model"""
+    lin_elastic_region = elastic[:upperyieldpoint_index]
+    lin_elastic_model = linfit(lin_elastic_region)
+    
+    """
+    If the upper yield point is the only yield point, 
+    then the material doesn't exhibit the yield point phenomenon.
+
+    Otherwise, we establish the domain in which the yield point 
+    phenomenon occurs, within which we will be selecting nearest
+    neighbors as a method of approximation. The yield point pheno-
+    menon occurs when there are two distinct yield points, and 
+    that when plastic deformation begins, stress is immediately 
+    relieved.
+    """
+    yieldpointphenom_region = None
+    yieldpointphenom = True
+
+    if upperyieldpoint_index==yield_index:
+        yieldpointphenom = False        
+
+    if yieldpointphenom:
+        yieldpointphenom_region = [upperyieldpoint_index,yield_index]
+
+    """We must determine which domain contains the strain point requested"""
+    
+    start_yield = upperyieldpoint[0]
+    
+    if strain < 0 or strain > max(data[:,0]):
+        
+        """(Out of range)"""
+        return np.nan
+    
+    elif strain < start_yield:
+        
+        """Linear approximation (elastic region)"""
+        return np.array([strain, lin_elastic_model.predict(strain)])[None,:] 
+
+    elif yieldpointphenom and strain >= start_yield and strain < yielding[0]:
+        
+        """Picks the nearest neighbor in this zone"""
+        yieldpoints_inregion = elastic[np.where(np.logical_and(elastic[:,0] >= start_yield, elastic[:,0] < yielding[0]) )]
+
+        """As soon as we find a neighbor, we return its value"""
+        for val in yieldpoints_inregion:
+            if val[0] > strain:
+                return np.array([strain,val [1]])[None,:]
+        
+    elif not yieldpointphenom or strain >= yielding[0]:
+           
+        """We fit a logarithmic curve to approximate the plastic region"""
+        plastic_reg = log_approx(plastic)
+        return np.array([strain,plastic_reg(strain)])[None,:] 
+                 
+
+def log_approx(model):
+    """
+    Given a dataset with two columns,
+    this function returns the logarithmic
+    function that best fits that data.
+    """
+    
+    """a and c are parameters"""
+    def fit(x, a, c):
+        return a*np.log(x)+c
+
+    strain = model[:,0]
+    stress = model[:,1]
+
+    """We are fitting a logarithmic curve as closely as possible to the dataset"""
+    optimal_params, cov_matrix = curve_fit(fit,strain,stress)
+    a, c = optimal_params
+
+    """The fitted version of the fit function"""
+    def bestfit(x):
+        return a*np.log(x)+c
+        
+    return bestfit
+
+def log_prep(model, cutoff = 0.025):
+    """
+    Makes data ready for logarithmic 
+    approximation. Deletes data components that
+    we know are inaccurate and sets all to be
+    positive because logs can only be taken of
+    positive values.
+    """
+    
+    model = delete_noise(model,cutoff=cutoff)
+    model = adjust(model)
+    return model
 
 def delete_noise(model,cutoff = 0.025):
     """
@@ -174,7 +296,7 @@ def predictlinear(data, step = 0.5):
     """Creates a linear model based on data and predicts its values over the domain, returning the predictions."""
     
     est = linfit(data)
-    x_pred = np.arange(min(data[:,0]),max(data[:,0]+1), step)
+    x_pred = np.arange(min(data[:,0]),max(data[:,0]), step)
     y_pred = est.predict(x_pred[:,None])
     
     return combine_data(x_pred,y_pred)

@@ -1,2 +1,5 @@
 automc
 irreverisble.so
+
+# ignore the compiled python bitcode
+*.pyc

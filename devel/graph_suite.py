@@ -9,6 +9,8 @@ IntervalPlot3D -- takes a function in R3, an x domain, and a y domain, and plots
 barGraph -- takes some data points and plots them as a series of bars, with optionally specifiable tick labels.\n
 plot2D -- takes a set of data with two columns and plots the data, where markers for the data set can be specified.\n
 plotmult2D -- takes two data sets and plots each, where each data set is like the input for plot2D.\n
+
+-Edward Nusinovich
 """
 
 import matplotlib

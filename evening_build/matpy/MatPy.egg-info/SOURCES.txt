@@ -1,0 +1,12 @@
+README
+setup.py
+MatPy/__init__.py
+MatPy/graph_suite.py
+MatPy/material_analytics.py
+MatPy/optimization_suite.py
+MatPy/parser.py
+MatPy.egg-info/PKG-INFO
+MatPy.egg-info/SOURCES.txt
+MatPy.egg-info/dependency_links.txt
+MatPy.egg-info/requires.txt
+MatPy.egg-info/top_level.txt
