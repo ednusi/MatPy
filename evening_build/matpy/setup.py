@@ -2,7 +2,7 @@ import setuptools
 from distutils.core import setup
 
 setup(name='MatPy',
-      version='1.0.1',
+      version='1.0.2',
       packages=['MatPy',],
       author='Edward Alexander Nusinovich',
       author_email='edward.nusinovich@gmail.com',
@@ -13,7 +13,6 @@ setup(name='MatPy',
           'sklearn',
           'DataModelDict',
           'pybrain',
-          'timeit',
           'memory_profiler'
       ],
 	  url='https://github.com/ednusi/MatPy/tree/master/evening_build/matpy',

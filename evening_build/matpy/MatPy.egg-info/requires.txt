@@ -4,5 +4,4 @@ scipy
 sklearn
 DataModelDict
 pybrain
-timeit
 memory_profiler
