@@ -1,4 +1,5 @@
-*pip install MatPy* should do the trick :-)
+**pip install MatPy**
+should do the trick :-)
 
 If you want to contribute, fork this or clone it!
 
