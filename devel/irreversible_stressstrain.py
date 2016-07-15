@@ -71,12 +71,12 @@ class StressStrain:
 	# looks at mechanical properties of material based on the physical model and experimental parameters
 	# minimizes difference between experimental data and physical model
 	# SS_stress is the yield stress
-	def mcfunc(self, model_parameters):
+	def mcfunc(self, model_parameters, SS_stress):
 		
 		no_samples = 1
 		
 		#experimental parameters
-		SS_stress=863.845922326 # determined by material_analytics.py
+		#SS_stress = 1009.384532 # determined by material_analytics.py
 		T_service = 22. + 273.
 		prec_stress = 0
 
@@ -128,5 +128,18 @@ class StressStrain:
 		cal_val = np.asarray(cal_val)
 
 		return error_rms
+
+        # returns the predicted stress_strain model for a given input
+	def irreversible_model(self, model_parameters, SS_stress):
+		
+		no_samples = 1
+		
+		#experimental parameters
+		T_service = 22. + 273.
+		prec_stress = 0
+
+		strain_stress, WTN = irreverisble.mechanics(prec_stress,SS_stress,T_service,model_parameters,no_samples)
+		return np.array(np.trim_zeros(strain_stress)).reshape(-1,2)
+                
 
 		

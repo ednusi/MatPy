@@ -13,9 +13,11 @@ plotmult2D -- takes two data sets and plots each, where each data set is like th
 
 import matplotlib
 from matplotlib import pyplot as plot
-matplotlib.rcParams.update({'font.size': 16}) # default font size
 
-def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",title="",fontsize=14):
+defaultfontsize = 30
+matplotlib.rcParams.update({'font.size': defaultfontsize}) # default font size
+
+def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",title="",fontsize=defaultfontsize):
     """
     Plots a function over a given domain, allowing the user to provide labels for the axes.
 
@@ -112,7 +114,7 @@ def barGraph(data, ylabel='', title='', xticklabels=None):
     plot.ylim(0,max(data)*1.5) # enforces limits on axis range
     plot.show()
     
-def plot2D(data, xtitle='', ytitle='', title='', marker='b-'):
+def plot2D(data, xtitle='', ytitle='', title='', marker='b-', fontsize=defaultfontsize):
     """
     Takes two columns for data, and plots it.
 
@@ -122,8 +124,8 @@ def plot2D(data, xtitle='', ytitle='', title='', marker='b-'):
        | marker (uses pyplot's standard markers)
     """
     
-    # default font size
-    matplotlib.rcParams.update({'font.size': 16}) 
+    # figure size is set
+    matplotlib.rcParams.update({'font.size': fontsize}) 
     fig, ax = plot.subplots(figsize=(12, 9))
 
     # plot stress vs strain
@@ -141,7 +143,7 @@ def plot2D(data, xtitle='', ytitle='', title='', marker='b-'):
     plot.show()
     
     
-def plotmult2D(data1, data2, xtitle='', ytitle='', title='', marker1='b-', marker2='r^'):
+def plotmult2D(data1, data2, xtitle='', ytitle='', title='', marker1='b-', marker2='r^', fontsize=defaultfontsize):
     """
     Similar to plot2D, but plots 2 data sets.
 
@@ -153,8 +155,8 @@ def plotmult2D(data1, data2, xtitle='', ytitle='', title='', marker1='b-', marke
        | markers
     """
     
-    # default font size
-    matplotlib.rcParams.update({'font.size': 16}) 
+    # figure size is set
+    matplotlib.rcParams.update({'font.size': fontsize}) 
     fig, ax = plot.subplots(figsize=(12, 9))
 
     # plot stress vs strain

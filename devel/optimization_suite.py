@@ -18,7 +18,7 @@ from pybrain.optimization import GA
 import timeit
 from memory_profiler import memory_usage
 
-def minimize_suite(function, methods, guess):
+def minimize_suite(function, methods, guess, SS_stress=None):
     """
     This method takes any method provided by http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html.
 
@@ -32,7 +32,7 @@ def minimize_suite(function, methods, guess):
     stop = np.zeros(0)
     num_iters = np.zeros(0)
     most_mem = np.zeros(0)
-    result = []
+    result = []        
 
     # testing every minimization method
     for method in methods:
@@ -41,8 +41,12 @@ def minimize_suite(function, methods, guess):
 
             start = np.append(start,timeit.default_timer())
 
-            # Possibly was finding the iterations in the wrong order
-            cur_result = minimize(function, x0 = guess, method = method, tol=1e-6) 
+            if SS_stress:
+                cur_result = minimize(function, x0 = guess, args = (SS_stress), method = method, tol=1e-2)
+
+            else:
+                cur_result = minimize(function, x0 = guess, method = method, tol=1e-6)
+
             result.append(cur_result)
 
             keys = cur_result.keys() # contains all traits of result
@@ -64,6 +68,10 @@ def minimize_suite(function, methods, guess):
         num_iters, start, stop = iter_minimize(method, num_iters, start, stop, guess)
 
     exec_time = stop-start
+
+    # if we are working with stress/strain data, we return the first optimal model parameters
+    if SS_stress:
+        return result[0].x[0], result[0].x[1] 
 
     # If an algorithm took (-1) iterations, the number of iterations was not returned
     for counter, method in enumerate(methods):

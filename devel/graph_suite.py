@@ -114,7 +114,7 @@ def barGraph(data, ylabel='', title='', xticklabels=None):
     plot.ylim(0,max(data)*1.5) # enforces limits on axis range
     plot.show()
     
-def plot2D(data, xtitle='', ytitle='', title='', marker='b-'):
+def plot2D(data, xtitle='', ytitle='', title='', marker='b-', fontsize=defaultfontsize):
     """
     Takes two columns for data, and plots it.
 
@@ -125,6 +125,7 @@ def plot2D(data, xtitle='', ytitle='', title='', marker='b-'):
     """
     
     # figure size is set
+    matplotlib.rcParams.update({'font.size': fontsize}) 
     fig, ax = plot.subplots(figsize=(12, 9))
 
     # plot stress vs strain
@@ -142,7 +143,7 @@ def plot2D(data, xtitle='', ytitle='', title='', marker='b-'):
     plot.show()
     
     
-def plotmult2D(data1, data2, xtitle='', ytitle='', title='', marker1='b-', marker2='r^'):
+def plotmult2D(data1, data2, xtitle='', ytitle='', title='', marker1='b-', marker2='r^', fontsize=defaultfontsize):
     """
     Similar to plot2D, but plots 2 data sets.
 
@@ -155,6 +156,7 @@ def plotmult2D(data1, data2, xtitle='', ytitle='', title='', marker1='b-', marke
     """
     
     # figure size is set
+    matplotlib.rcParams.update({'font.size': fontsize}) 
     fig, ax = plot.subplots(figsize=(12, 9))
 
     # plot stress vs strain
