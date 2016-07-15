@@ -22,10 +22,10 @@ def minimize_suite(function, methods, guess):
     """
     This method takes any method provided by http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html.
 
-    This method takes a function, strings representing the method to test it with, and an initial guess for the optimal solution.
-    Every minimizer in this package is a local optimization algorithm, so it will get trapped in convexities of a dataset.
-    In running, this function will display the amount of memory, the runtime, and the number of algorithmic iterations required to
-    achieve an optimal result.
+   | This method takes a function, strings representing the method to test it with, and an initial guess for the optimal solution.
+   | Every minimizer in this package is a local optimization algorithm, so it will get trapped in convexities of a dataset.
+   | In running, this function will display the amount of memory, the runtime, and the number of algorithmic iterations required to
+   | achieve an optimal result.
     """
 
     start = np.zeros(0)
@@ -78,11 +78,12 @@ def custom_minimize(function, algorithm, bounds = None, guess = None):
     This is similar to the minimize_suite, but is defined for functions like basinhopping or brute_force (in scipy.optimize), so the second parameter is a user-provided algorithm for optimization.
 
     Arguments:
-        algorithm - has been tested with things like scipy.optimize.basinhopping, and bruteforce, but should work with a user-defined algorithm as well.
+       | algorithm - has been tested with things like scipy.optimize.basinhopping, and bruteforce, but should work with a user-defined algorithm as well.
     Keyword Arguments:
-        bounds - Limits the search domain
-        guess - an initial guess at an optimal solution
-    Which keyword arguments are required or optional depends on the provided algorithm.
+       | bounds - Limits the search domain
+       | guess - an initial guess at an optimal solution
+    
+	| Which keyword arguments are required or optional depends on the provided algorithm.
     """
 
     most_mem = np.zeros(0)
@@ -126,8 +127,8 @@ def GA_minimize(function, guess):
     """
     This function runs the genetic algorithm from PyBrain (http://pybrain.org/docs/api/optimization/optimization.html) on a function, provided with an initial guess.
 
-    NOTE: Format is **CRUCIAL** here or this will not work (blame the authors of PyBrain, sorry):
-    Function must take a **TUPLE** (**EVEN** if of only one element (in the form (a, )) and guess **MUST BE A LIST** (even if only with one element)
+   | NOTE: Format is **crucial** here or this will not work (blame the authors of PyBrain, sorry):
+   | Function must take a **tuple** (**Even** if of only one element (in the form (a, )) and guess **MUST BE A LIST** (even if only with one element)
     """
     
     result = GA(function, guess, minimize=True) # set to minimize by default

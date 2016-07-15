@@ -9,27 +9,27 @@ IntervalPlot3D -- takes a function in R3, an x domain, and a y domain, and plots
 barGraph -- takes some data points and plots them as a series of bars, with optionally specifiable tick labels.\n
 plot2D -- takes a set of data with two columns and plots the data, where markers for the data set can be specified.\n
 plotmult2D -- takes two data sets and plots each, where each data set is like the input for plot2D.\n
-
--Edward Nusinovich
 """
 
 import matplotlib
 from matplotlib import pyplot as plot
-matplotlib.rcParams.update({'font.size': 16}) # default font size
 
-def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",title="",fontsize=14):
+defaultfontsize = 30
+matplotlib.rcParams.update({'font.size': defaultfontsize}) # default font size
+
+def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",title="",fontsize=defaultfontsize):
     """
     Plots a function over a given domain, allowing the user to provide labels for the axes.
 
     Requires a user to provide a function, and x_domain, and a y_domain.
     Keyword args:
-        -- The three labels for the axes
-        xlabel
-        ylabel
-        zlabel
-        -- 
-        title - The title of the chart
-        fontsize - Override the default font size, which is 14
+        | **The three labels for the axes**
+        | xlabel
+        | ylabel
+        | zlabel
+        |  
+        | title - The title of the chart
+        | fontsize - Override the default font size, which is 14
     """
 
     fig = plot.figure()
@@ -119,11 +119,12 @@ def plot2D(data, xtitle='', ytitle='', title='', marker='b-'):
     Takes two columns for data, and plots it.
 
     Keyword arguments (optional):
-        axes titles, plot title, and marker (uses pyplot's standard markers)
+       | axes titles 
+       | plot title
+       | marker (uses pyplot's standard markers)
     """
     
-    # default font size
-    matplotlib.rcParams.update({'font.size': 16}) 
+    # figure size is set
     fig, ax = plot.subplots(figsize=(12, 9))
 
     # plot stress vs strain
@@ -146,14 +147,14 @@ def plotmult2D(data1, data2, xtitle='', ytitle='', title='', marker1='b-', marke
     Similar to plot2D, but plots 2 data sets.
 
     Takes two datasets, each consisting of two columns.
+
     Keyword arguments (optional):
-        axes labels
-        plot title
-        markers
+       | axes labels
+       | plot title
+       | markers
     """
     
-    # default font size
-    matplotlib.rcParams.update({'font.size': 16}) 
+    # figure size is set
     fig, ax = plot.subplots(figsize=(12, 9))
 
     # plot stress vs strain

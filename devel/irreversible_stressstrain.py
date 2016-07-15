@@ -71,11 +71,12 @@ class StressStrain:
 	# looks at mechanical properties of material based on the physical model and experimental parameters
 	# minimizes difference between experimental data and physical model
 	# SS_stress is the yield stress
-	def mcfunc(self, model_parameters, SS_stress=750):
+	def mcfunc(self, model_parameters):
 		
 		no_samples = 1
 		
 		#experimental parameters
+		SS_stress=863.845922326 # determined by material_analytics.py
 		T_service = 22. + 273.
 		prec_stress = 0
 
@@ -85,8 +86,6 @@ class StressStrain:
 		cal_val = []
 		errors = []
 		
-		return strain_stress
-"""
 		# this code, when uncommented, traverses all experimental data points and return their error
 		#traverses experimental data points
 		for iexp, data in enumerate(self.exp[:,0]):
@@ -129,5 +128,5 @@ class StressStrain:
 		cal_val = np.asarray(cal_val)
 
 		return error_rms
-"""
+
 		
