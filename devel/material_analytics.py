@@ -137,8 +137,12 @@ def predict_stress(data, strain):
     upperyieldpoint = elastic[upperyieldpoint_index]
 
     """We estimate the region until the first upper yield point with a linear model"""
-    lin_elastic_region = elastic[:upperyieldpoint_index]
-    lin_elastic_model = linfit(lin_elastic_region)
+    lin_elastic_region = elastic[:upperyieldpoint_index+1]
+    
+    """Creating a function that will linearly fit the data"""
+    def lin_elastic_model(x):
+		m = (lin_elastic_region[-1,1]-lin_elastic_region[0,1])/(lin_elastic_region[-1,0]-lin_elastic_region[0,0])
+		return m*x
     
     """
     If the upper yield point is the only yield point, 
@@ -172,7 +176,7 @@ def predict_stress(data, strain):
     elif strain < start_yield:
         
         """Linear approximation (elastic region)"""
-        return np.array([strain, lin_elastic_model.predict(strain)])[None,:] 
+        return np.array([strain, lin_elastic_model(strain)])[None,:] 
 
     elif yieldpointphenom and strain >= start_yield and strain < yielding[0]:
         
@@ -183,6 +187,8 @@ def predict_stress(data, strain):
         for val in yieldpoints_inregion:
             if val[0] > strain:
                 return np.array([strain,val [1]])[None,:]
+        
+        return np.array(yieldpoints_inregion[-1])[None, :]
         
     elif not yieldpointphenom or strain >= yielding[0]:
            
