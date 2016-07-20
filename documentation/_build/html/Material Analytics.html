@@ -26,7 +26,7 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="MaPy 1.0.0 documentation" href="index.html" />
     <link rel="next" title="Optimization Suite" href="Optimization Suite.html" />
-    <link rel="prev" title="Stress-Strain Data Parser" href="Parser.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="Parser.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -141,20 +141,6 @@ there are an odd number of points.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="material_analytics.predict_stress">
-<code class="descclassname">material_analytics.</code><code class="descname">predict_stress</code><span class="sig-paren">(</span><em>data</em>, <em>strain</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.predict_stress" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a two-element array with the strain value as the first
-item, and the expected stress as the second.</p>
-<p>Given a dataset and a strain value, predicts what the stress will be at that point.
-As the first parameter, data should be an array with a bunch of entries
-[strain, stress]. 
-The second parameter, strain should be the value for which you wish to estimate 
-stress.</p>
-<p>This effectively constructs a physical model for the stress-strain 
-behavior of any material on-the-fly.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="material_analytics.predictlinear">
 <code class="descclassname">material_analytics.</code><code class="descname">predictlinear</code><span class="sig-paren">(</span><em>data</em>, <em>step=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.predictlinear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a linear model based on data and predicts its values over the domain, returning the predictions.</p>
@@ -179,6 +165,26 @@ behavior of any material on-the-fly.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="material_analytics.stress_model">
+<code class="descclassname">material_analytics.</code><code class="descname">stress_model</code><span class="sig-paren">(</span><em>data</em>, <em>strain=None</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.stress_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a two-element array with the strain value as the first
+item, and the expected stress as the second if a strain value is provided.
+Otherwise returns a function that will predict stress given a strain value.</p>
+<p>Given a dataset and a strain value, predicts what the stress will be at that point.
+As the first parameter, data should be an array with a bunch of entries
+[strain, stress]. 
+The second parameter, strain should be the value for which you wish to estimate 
+stress.</p>
+<p>This effectively constructs a physical model for the stress-strain 
+behavior of any material on-the-fly. If no expected strain value is
+provided, this function will simply return the physical model function
+that automatically computes expected stress. This is the preferred use-case 
+for large datasets where the stress-strain curve will need to be predicted repeatedly,
+because otherwise the entire model is recalculated each time, which
+is hugely inefficient.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="material_analytics.yield_stress">
 <code class="descclassname">material_analytics.</code><code class="descname">yield_stress</code><span class="sig-paren">(</span><em>model</em>, <em>numpoints=1000</em>, <em>cutoff=0.05</em>, <em>startx=None</em>, <em>endx=None</em>, <em>decreasingend=False</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.yield_stress" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds the yield stress of a dataset <strong>automatically</strong> using kmeans clustering and covariance analysis.</p>
@@ -192,6 +198,12 @@ end of the interval, respectively. For the purposes of this method, it is import
 until the point of failure of a given material.</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="material_analytics.young_modulus">
+<code class="descclassname">material_analytics.</code><code class="descname">young_modulus</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.young_modulus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a stress-strain dataset, returns Young&#8217;s Modulus.</p>
+</dd></dl>
+
 </div>
 
 
@@ -203,7 +215,7 @@ until the point of failure of a given material.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="Parser.html" title="previous chapter">Stress-Strain Data Parser</a></li>
+      <li>Previous: <a href="Parser.html" title="previous chapter">&lt;no title&gt;</a></li>
       <li>Next: <a href="Optimization Suite.html" title="next chapter">Optimization Suite</a></li>
   </ul></li>
 </ul>

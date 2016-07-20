@@ -1,3 +1,3 @@
-.. automodule:: parser
+.. automodule:: mat_data_parser
 	:members:
  

@@ -39,7 +39,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <span class="target" id="module-parser"></span><div class="section" id="stress-strain-data-parser">
+  <span class="target" id="module-mat_data_parser"></span><div class="section" id="stress-strain-data-parser">
 <h1>Stress-Strain Data Parser<a class="headerlink" href="#stress-strain-data-parser" title="Permalink to this headline">¶</a></h1>
 <p>Given a file containing experimental stress-strain
 data, this class parses it and turns it into a
@@ -70,8 +70,8 @@ and then rows and columns with data as follows:</p>
 </pre></div>
 </div>
 <dl class="class">
-<dt id="parser.stress_strain">
-<em class="property">class </em><code class="descclassname">parser.</code><code class="descname">stress_strain</code><span class="sig-paren">(</span><em>data_file</em>, <em>type='txt'</em><span class="sig-paren">)</span><a class="headerlink" href="#parser.stress_strain" title="Permalink to this definition">¶</a></dt>
+<dt id="mat_data_parser.stress_strain">
+<em class="property">class </em><code class="descclassname">parser.</code><code class="descname">stress_strain</code><span class="sig-paren">(</span><em>data_file</em>, <em>type='txt'</em><span class="sig-paren">)</span><a class="headerlink" href="#mat_data_parser.stress_strain" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class will contain the relevant data from a file</p>
 <p>For the constructor:
 Takes in a file name, by default assuming it&#8217;s a text file.</p>
@@ -82,8 +82,8 @@ Takes in a file name, by default assuming it&#8217;s a text file.</p>
 If you wish to parse an xml file, specify type=&#8221;xml&#8221;
 as a keyword argument.</p>
 <dl class="method">
-<dt id="parser.stress_strain.get_experimental_data">
-<code class="descname">get_experimental_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parser.stress_strain.get_experimental_data" title="Permalink to this definition">¶</a></dt>
+<dt id="mat_data_parser.stress_strain.get_experimental_data">
+<code class="descname">get_experimental_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mat_data_parser.stress_strain.get_experimental_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns experimental data gathered from initialization.</p>
 <p>If you are using the other methods in this package to
 automatically determine yield stress, call this method after

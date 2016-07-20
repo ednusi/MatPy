@@ -50,8 +50,8 @@ algorithmic iterations, and runtime.</p>
 <dd><blockquote>
 <div>This function runs the genetic algorithm from PyBrain (<a class="reference external" href="http://pybrain.org/docs/api/optimization/optimization.html">http://pybrain.org/docs/api/optimization/optimization.html</a>) on a function, provided with an initial guess.</div></blockquote>
 <div class="line-block">
-<div class="line">NOTE: Format is <strong>CRUCIAL</strong> here or this will not work (blame the authors of PyBrain, sorry):</div>
-<div class="line">Function must take a <strong>TUPLE</strong> (<strong>EVEN</strong> if of only one element (in the form (a, )) and guess <strong>MUST BE A LIST</strong> (even if only with one element)</div>
+<div class="line">NOTE: Format is <strong>crucial</strong> here or this will not work (blame the authors of PyBrain, sorry):</div>
+<div class="line">Function must take a <strong>tuple</strong> (<strong>Even</strong> if of only one element (in the form (a, )) and guess <strong>MUST BE A LIST</strong> (even if only with one element)</div>
 </div>
 </dd></dl>
 
@@ -81,7 +81,7 @@ algorithmic iterations, and runtime.</p>
 
 <dl class="function">
 <dt id="optimization_suite.minimize_suite">
-<code class="descclassname">optimization_suite.</code><code class="descname">minimize_suite</code><span class="sig-paren">(</span><em>function</em>, <em>methods</em>, <em>guess</em><span class="sig-paren">)</span><a class="headerlink" href="#optimization_suite.minimize_suite" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">optimization_suite.</code><code class="descname">minimize_suite</code><span class="sig-paren">(</span><em>function</em>, <em>methods</em>, <em>guess</em>, <em>SS_stress=None</em><span class="sig-paren">)</span><a class="headerlink" href="#optimization_suite.minimize_suite" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>This method takes any method provided by <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html">http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html</a>.</div></blockquote>
 <div class="line-block">
