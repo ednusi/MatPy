@@ -2,7 +2,7 @@ import setuptools
 from distutils.core import setup
 
 setup(name='MatPy',
-      version='1.0.2',
+      version='1.0.3',
       packages=['MatPy',],
       author='Edward Alexander Nusinovich',
       author_email='edward.nusinovich@gmail.com',

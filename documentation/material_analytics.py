@@ -23,6 +23,40 @@ from sklearn.linear_model import LinearRegression
 from sklearn.cluster import MiniBatchKMeans as mbkmeans
 from sklearn.cluster import KMeans
 
+def young_modulus(data):
+    """
+    Given a stress-strain dataset, returns Young's Modulus.
+    """
+    
+    yielding = yield_stress(data)[0]
+
+    """Finds the yield index"""
+    yield_index = 0
+    for index, point in enumerate(data):
+
+        if (point == yielding).all():
+            yield_index = index
+            break
+
+    """Finds data in elastic region"""
+    elastic = data[:yield_index+1]
+
+    """
+    Finds the upper yield point (lower yield point is the *yielding* variable). 
+    We're taking the first element ([0]) because it returns the 
+    first element that meets the criteria in parentheses.
+    
+    It's a two-dimensional array so we have to do this twice.
+    """
+    upperyieldpoint_index = np.where(elastic==max(elastic[:,1]))[0][0]
+    upperyieldpoint = elastic[upperyieldpoint_index]
+
+    """We estimate the region until the first upper yield point with a linear model"""
+    lin_elastic_region = elastic[:upperyieldpoint_index+1]
+    
+    """The slope of this region is Young's Modulus"""
+    return (lin_elastic_region[-1,1]-lin_elastic_region[0,1])/(lin_elastic_region[-1,0]-lin_elastic_region[0,0])
+
 def yield_stress(model, numpoints=1000, cutoff=0.05, startx=None, endx=None, decreasingend=False):
     """
     Finds the yield stress of a dataset **automatically** using kmeans clustering and covariance analysis.
@@ -97,10 +131,11 @@ def yield_stress(model, numpoints=1000, cutoff=0.05, startx=None, endx=None, dec
 
     raise ValueError("The data does not seem to have a yield")
     
-def predict_stress(data, strain):
+def stress_model(data, strain = None):
     """
     Returns a two-element array with the strain value as the first
-    item, and the expected stress as the second.
+    item, and the expected stress as the second if a strain value is provided.
+    Otherwise returns a function that will predict stress given a strain value.
     
     Given a dataset and a strain value, predicts what the stress will be at that point.
     As the first parameter, data should be an array with a bunch of entries
@@ -109,7 +144,12 @@ def predict_stress(data, strain):
     stress.
     
     This effectively constructs a physical model for the stress-strain 
-    behavior of any material on-the-fly.    
+    behavior of any material on-the-fly. If no expected strain value is
+    provided, this function will simply return the physical model function
+    that automatically computes expected stress. This is the preferred use-case 
+    for large datasets where the stress-strain curve will need to be predicted repeatedly,
+    because otherwise the entire model is recalculated each time, which
+    is hugely inefficient.    
     """
     
     yielding = yield_stress(data)[0]
@@ -137,8 +177,12 @@ def predict_stress(data, strain):
     upperyieldpoint = elastic[upperyieldpoint_index]
 
     """We estimate the region until the first upper yield point with a linear model"""
-    lin_elastic_region = elastic[:upperyieldpoint_index]
-    lin_elastic_model = linfit(lin_elastic_region)
+    lin_elastic_region = elastic[:upperyieldpoint_index+1]
+    
+    """Creating a function that will linearly fit the data"""
+    def lin_elastic_model(x):
+        m = (lin_elastic_region[-1,1]-lin_elastic_region[0,1])/(lin_elastic_region[-1,0]-lin_elastic_region[0,0])
+        return m*x + lin_elastic_region[0,1]
     
     """
     If the upper yield point is the only yield point, 
@@ -164,31 +208,42 @@ def predict_stress(data, strain):
     
     start_yield = upperyieldpoint[0]
     
-    if strain < 0 or strain > max(data[:,0]):
-        
-        """(Out of range)"""
-        return np.nan
+    def stress_value(strain):
     
-    elif strain < start_yield:
+        if strain < 0 or strain > max(data[:,0]):
+            
+            """(Out of range)"""
+            return np.nan
         
-        """Linear approximation (elastic region)"""
-        return np.array([strain, lin_elastic_model.predict(strain)])[None,:] 
+        elif strain < start_yield:
+            
+            """Linear approximation (elastic region)"""
+            return [strain, lin_elastic_model(strain)]
 
-    elif yieldpointphenom and strain >= start_yield and strain < yielding[0]:
-        
-        """Picks the nearest neighbor in this zone"""
-        yieldpoints_inregion = elastic[np.where(np.logical_and(elastic[:,0] >= start_yield, elastic[:,0] < yielding[0]) )]
+        elif yieldpointphenom and strain >= start_yield and strain < yielding[0]:
+            
+            """Picks the nearest neighbor in this zone"""
+            yieldpoints_inregion = elastic[np.where(np.logical_and(elastic[:,0] >= start_yield, elastic[:,0] < yielding[0]) )]
 
-        """As soon as we find a neighbor, we return its value"""
-        for val in yieldpoints_inregion:
-            if val[0] > strain:
-                return np.array([strain,val [1]])[None,:]
+            """As soon as we find a neighbor, we return its value"""
+            for val in yieldpoints_inregion:
+                if val[0] > strain:
+                    return [strain,val [1]]
+            
+            return yieldpoints_inregion[-1]
+            
+        elif not yieldpointphenom or strain >= yielding[0]:
+               
+            """We fit a logarithmic curve to approximate the plastic region"""
+            plastic_reg = log_approx(plastic)
+            return np.array([strain,plastic_reg(strain)])
+            
+    """If we should evaluate the function at a point, we'll do so, otherwise we return the function itself"""
+    if strain is None:
+        return stress_value
         
-    elif not yieldpointphenom or strain >= yielding[0]:
-           
-        """We fit a logarithmic curve to approximate the plastic region"""
-        plastic_reg = log_approx(plastic)
-        return np.array([strain,plastic_reg(strain)])[None,:] 
+    else:
+        return stress_value(strain)
                  
 
 def log_approx(model):

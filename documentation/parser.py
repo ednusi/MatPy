@@ -77,7 +77,7 @@ class stress_strain:
                 distable.append(disrow)
 
             del distable[0] # gets rid of header
-            self.exp = np.array(distable)
+            self.exp = np.array(distable)[:,:2] # disregarding strain rate (only actually does things for our Kolsky bar data)
 
     def get_experimental_data(self):
         """

@@ -17,6 +17,12 @@ from matplotlib import pyplot as plot
 defaultfontsize = 30
 matplotlib.rcParams.update({'font.size': defaultfontsize}) # default font size
 
+def texOn():
+    plot.rc('text', usetex=True)
+
+def texOff():
+    plot.rc('text', usetex=False)
+
 def IntervalPlot3D(function, x_domain, y_domain, xlabel="",ylabel="",zlabel="",title="",fontsize=defaultfontsize):
     """
     Plots a function over a given domain, allowing the user to provide labels for the axes.

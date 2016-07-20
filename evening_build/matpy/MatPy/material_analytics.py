@@ -23,6 +23,40 @@ from sklearn.linear_model import LinearRegression
 from sklearn.cluster import MiniBatchKMeans as mbkmeans
 from sklearn.cluster import KMeans
 
+def young_modulus(data):
+    """
+    Given a stress-strain dataset, returns Young's Modulus.
+    """
+    
+    yielding = yield_stress(data)[0]
+
+    """Finds the yield index"""
+    yield_index = 0
+    for index, point in enumerate(data):
+
+        if (point == yielding).all():
+            yield_index = index
+            break
+
+    """Finds data in elastic region"""
+    elastic = data[:yield_index+1]
+
+    """
+    Finds the upper yield point (lower yield point is the *yielding* variable). 
+    We're taking the first element ([0]) because it returns the 
+    first element that meets the criteria in parentheses.
+    
+    It's a two-dimensional array so we have to do this twice.
+    """
+    upperyieldpoint_index = np.where(elastic==max(elastic[:,1]))[0][0]
+    upperyieldpoint = elastic[upperyieldpoint_index]
+
+    """We estimate the region until the first upper yield point with a linear model"""
+    lin_elastic_region = elastic[:upperyieldpoint_index+1]
+    
+    """The slope of this region is Young's Modulus"""
+    return (lin_elastic_region[-1,1]-lin_elastic_region[0,1])/(lin_elastic_region[-1,0]-lin_elastic_region[0,0])
+
 def yield_stress(model, numpoints=1000, cutoff=0.05, startx=None, endx=None, decreasingend=False):
     """
     Finds the yield stress of a dataset **automatically** using kmeans clustering and covariance analysis.
