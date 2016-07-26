@@ -18,7 +18,7 @@ from pybrain.optimization import GA
 import timeit
 from memory_profiler import memory_usage
 
-def minimize_suite(function, methods, guess, SS_stress=None):
+def minimize_suite(function, methods, guess, SS_stress=None, tol=1.0):
     """
     This method takes any method provided by http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html.
 
@@ -34,7 +34,7 @@ def minimize_suite(function, methods, guess, SS_stress=None):
     most_mem = np.zeros(0)
     result = []        
 
-    # testing every minimization method
+    # testing every minimization method (tolerance is 1, but can be changed as needed)
     for method in methods:
         
         def iter_minimize(method, num_iters, start, stop, guess):
@@ -42,10 +42,10 @@ def minimize_suite(function, methods, guess, SS_stress=None):
             start = np.append(start,timeit.default_timer())
 
             if SS_stress:
-                cur_result = minimize(function, x0 = guess, args = (SS_stress), method = method, tol=1e-2)
+                cur_result = minimize(function, x0 = guess, args = (SS_stress), method = method, tol=tol)
 
             else:
-                cur_result = minimize(function, x0 = guess, method = method, tol=1e-6)
+                cur_result = minimize(function, x0 = guess, method = method, tol=tol)
 
             result.append(cur_result)
 
@@ -69,16 +69,16 @@ def minimize_suite(function, methods, guess, SS_stress=None):
 
     exec_time = stop-start
 
-    # if we are working with stress/strain data, we return the first optimal model parameters
-    if SS_stress:
-        return result[0].x[0], result[0].x[1] 
-
     # If an algorithm took (-1) iterations, the number of iterations was not returned
     for counter, method in enumerate(methods):
 
         print '{0} took {1} seconds. The result, {4} was found at ({2}, {3})'.format(method,exec_time[counter],result[counter].x[0],result[counter].x[1],result[counter].fun)
         print '{0} used {1} megabytes and took {2} iterations'.format(method,most_mem[counter],num_iters[counter])
-        print
+        print 
+        
+    # if we are working with stress/strain data, we return the first optimal model parameters
+    if SS_stress:
+        return result[0].x[0], result[0].x[1] 
 
 
 def custom_minimize(function, algorithm, bounds = None, guess = None):

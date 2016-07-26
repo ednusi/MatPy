@@ -60,7 +60,7 @@ def young_modulus(data):
     """The slope of this region is Young's Modulus"""
     return (lin_elastic_region[-1,1]-lin_elastic_region[0,1])/(lin_elastic_region[-1,0]-lin_elastic_region[0,0])
 
-def yield_stress(model, numpoints=1000, cutoff=0.05, startx=None, endx=None, decreasingend=False):
+def yield_stress(model, numpoints=1000, cutoff=0.0, startx=None, endx=None, decreasingend=False):
     """
     Finds the yield stress of a dataset **automatically** using kmeans clustering and covariance analysis.
 
