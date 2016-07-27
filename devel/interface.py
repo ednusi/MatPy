@@ -20,9 +20,8 @@ from scipy.optimize import basinhopping
 from scipy.optimize import brute
 from pybrain.optimization import GA
 
-
-"""Display the plot of the file with its yield point"""
 def update():
+"""Display the plot of the file with its yield point"""
 
 	"""Opens file browser and gets selection"""
 	name = tkFileDialog.askopenfilename()
@@ -75,7 +74,7 @@ def update():
 		model_params = optimization_suite.minimize_suite(model.mcfunc, methods=[brute,], guess = guess ,SS_stress=SS_stress)
 
 	else:
-		model_params = GA(model.mcfunc,guess,minimize=True).learn()
+		model_params = optimization_suite.GA_minimize(model.mcfunc, guess)
 
 	"""Plots the data versus the fitted irreversible model data"""
 	plot.plotmult2D(data, model.irreversible_model(model_params,SS_stress), title = 'Fitted Thermodynamics', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')

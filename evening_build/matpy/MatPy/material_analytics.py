@@ -6,7 +6,10 @@ Contains all functionality needed to
 **automatically determine the yield stress**
 of a material (see *yield_stress()*), even with noisy data, given
 a stress-strain curve in the form
-[Strain|Stress] in each row.
+[Strain|Stress] in each row. Also automatically
+creates a phenomenological model for the material's behavior under
+stress and can return Young's Modulus for the elastic deformation
+of the material.
 
 This works for alloys that exhibit the yield point
 phenomenon as well.
@@ -57,7 +60,7 @@ def young_modulus(data):
     """The slope of this region is Young's Modulus"""
     return (lin_elastic_region[-1,1]-lin_elastic_region[0,1])/(lin_elastic_region[-1,0]-lin_elastic_region[0,0])
 
-def yield_stress(model, numpoints=1000, cutoff=0.05, startx=None, endx=None, decreasingend=False):
+def yield_stress(model, numpoints=1000, cutoff=0.0, startx=None, endx=None, decreasingend=False):
     """
     Finds the yield stress of a dataset **automatically** using kmeans clustering and covariance analysis.
 
@@ -130,6 +133,72 @@ def yield_stress(model, numpoints=1000, cutoff=0.05, startx=None, endx=None, dec
             return model[ind][None,:]
 
     raise ValueError("The data does not seem to have a yield")
+  
+def yield_stress_classic_fitted(data_original, cutoff = 0.0, offset = 0.002):
+
+    """Fit a log curve"""
+    data = log_prep(data_original, cutoff = cutoff)
+    logapprox = log_approx(data)
+
+    """Take sample data points"""
+    data_x = np.linspace(min(data[:,0]),max(data[:,0]),1001)
+    data_y = logapprox(data_x)
+    data = combine_data(data_x,data_y)
+
+    """Determine average slope"""
+    av_slope = (data[-1,1]-data[0,1])/(data[-1,0]-data[0,0]) #rise over run
+    closest_index = lambda data, value: (np.abs(data-value)).argmin()
+    deriv1st = combine_data(data[:,0], get_slopes(data))
+
+    """Determine where slope is closest to average"""
+    bend = closest_index(deriv1st[:,1],av_slope)
+
+    """Fitted this offset line to the left side"""
+    young_modulus = (data[bend,1]-data[0,1])/(data[bend,0]-data[0,0])
+    def linear_estimation(x):
+	return data[0,1] + young_modulus*(x-offset)
+
+    """Sample linear points"""
+    linear_y = linear_estimation(data_x)
+
+    """Find closest point in fitted curve"""
+    difference_bw_est = np.abs(data_y-linear_y)
+    intersection = data[np.where(difference_bw_est==min(difference_bw_est))[0]]
+
+    """Find closest point in original dataset"""
+    data = data_original
+    intersect_x = intersection[0,0]
+    intersect_index = closest_index(data[:,0],intersect_x)
+
+    return data[intersect_index][None,]
+    
+def yield_stress_classic_unfitted(data, cutoff = 0.0, offset = 0.002):
+
+    """Determine average slope"""
+    av_slope = (data[-1,1]-data[0,1])/(data[-1,0]-data[0,0])
+    closest_index = lambda data, value: (np.abs(data-value)).argmin()
+    deriv1st = combine_data(data[:,0],get_slopes(data))
+
+    """Determine where slope is closest to average"""
+    bend = closest_index(deriv1st[:,1],av_slope)
+
+    """Fitted this offset line to the left side"""
+    young_modulus = (data[bend,1]-data[0,1])/(data[bend,0]-data[0,0])
+    def linear_estimation(x):
+        return data[0,1] + young_modulus*(x-offset)
+
+    """Sample linear points"""
+    linear_y = linear_estimation(data[:,0])
+
+    """Find closest point in fitted curve"""
+    difference_bw_est = np.abs(data[:,1]-linear_y)
+    intersection = data[np.where(difference_bw_est==min(difference_bw_est))[0]]
+
+    """Find closest point in original dataset"""
+    intersect_x = intersection[0,0]
+    intersect_index = closest_index(data[:,0],intersect_x)
+
+    return data[intersect_index][None,]
     
 def stress_model(data, strain = None):
     """

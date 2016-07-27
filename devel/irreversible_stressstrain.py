@@ -1,16 +1,20 @@
 """
 This class contains the irreversible themodynamics model.
-
 """
 
 """Used to format data"""
 import numpy as np
 from DataModelDict import DataModelDict as dmd
 
-""" Compiles the Fortran code """
-bashCommand = "make fortran"
+"""Used to compile Fortran"""
 import subprocess
-process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+
+def build():
+	""" Compiles the Fortran code """
+	bashCommand = "make fortran"
+	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+
+build()
 
 """Importing the just-compiled irreversible thermo model"""
 import irreverisble 

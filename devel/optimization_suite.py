@@ -152,3 +152,5 @@ def GA_minimize(function, guess):
     print '{0} took {1} seconds'.format('Genetic Algorithm',exec_time)
     print '{0} used {1} megabytes'.format('Genetic Algorithm',mem)
     print
+    
+    return result
