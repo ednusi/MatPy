@@ -21,64 +21,64 @@ from scipy.optimize import brute
 from pybrain.optimization import GA
 
 def update():
-"""Display the plot of the file with its yield point"""
+    """Display the plot of the file with its yield point"""
 
-	"""Opens file browser and gets selection"""
-	name = tkFileDialog.askopenfilename()
-	
-	"""Creates model for data"""
-	if 'xml' in name:
-	    model = strainmodel(name, type='xml')
-	    
-	else:
-	    model = strainmodel(name)
-	
-	data = model.get_experimental_data()
-	
-	"""Will need to be set to user-input guess"""	    
-	guess = [-150,1]
-	
-	yieldpoint = None
-	
-	"""Gets radio button input as to which method to use to optimize"""
-	if yield_method.get() == 1:
-	    yieldpoint = material_analytics.yield_stress_classic_unfitted(data)
-	    
-	elif yield_method.get() == 2:
-	    yieldpoint = material_analytics.yield_stress_classic_fitted(data)
-	    
-	elif yield_method.get() == 3:
-	    yieldpoint = material_analytics.yield_stress(data)
-	    
-	else:
-	    elastic, plastic = material_analytics.kmeanssplit(data)
-	    yieldpoint = plastic[0][None,]
-	
-	"""Displays the found yield stress"""
-	plot.plotmult2D(data, yieldpoint, title = 'File', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
+    """Opens file browser and gets selection"""
+    name = tkFileDialog.askopenfilename()
+    
+    """Creates model for data"""
+    if 'xml' in name:
+        model = strainmodel(name, type='xml')
+        
+    else:
+        model = strainmodel(name)
+    
+    data = model.get_experimental_data()
+    
+    """Will need to be set to user-input guess"""       
+    guess = [-150,1]
+    
+    yieldpoint = None
+    
+    """Gets radio button input as to which method to use to optimize"""
+    if yield_method.get() == 1:
+        yieldpoint = material_analytics.yield_stress_classic_unfitted(data)
+        
+    elif yield_method.get() == 2:
+        yieldpoint = material_analytics.yield_stress_classic_fitted(data)
+        
+    elif yield_method.get() == 3:
+        yieldpoint = material_analytics.yield_stress(data)
+        
+    else:
+        elastic, plastic = material_analytics.kmeanssplit(data)
+        yieldpoint = plastic[0][None,]
+    
+    """Displays the found yield stress"""
+    plot.plotmult2D(data, yieldpoint, title = 'File', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
 
-	"""[0,1] is the first row, second column, which is the stress values"""
-	SS_stress = yieldpoint[0,1]
+    """[0,1] is the first row, second column, which is the stress values"""
+    SS_stress = yieldpoint[0,1]
 
-	model_training_methods = ['Nelder-Mead','Powell','CG','Newton-CG','BFGS','L-BFGS-B','SLSQP','COBYLA','TNC','Basinhopping','Brute Force','Genetic Algorithm']
-	
-	"""Because basinhopping, brute force, and GA are all in separate libraries, they are handled as separate cases."""
-	optmethod = optimization_method.get()-1
-	if optmethod<9:
-	    model_params = optimization_suite.minimize_suite(model.mcfunc, methods=[model_training_methods[optmethod],], guess = guess ,SS_stress=SS_stress)
+    model_training_methods = ['Nelder-Mead','Powell','CG','Newton-CG','BFGS','L-BFGS-B','SLSQP','COBYLA','TNC','Basinhopping','Brute Force','Genetic Algorithm']
+    
+    """Because basinhopping, brute force, and GA are all in separate libraries, they are handled as separate cases."""
+    optmethod = optimization_method.get()-1
+    if optmethod<9:
+        model_params = optimization_suite.minimize_suite(model.mcfunc, methods=[model_training_methods[optmethod],], guess = guess ,SS_stress=SS_stress)
 
-	elif optmethod==9:
-	    model_params = optimization_suite.minimize_suite(model.mcfunc, methods=[basinhopping,], guess = guess ,SS_stress=SS_stress)
+    elif optmethod==9:
+        model_params = optimization_suite.minimize_suite(model.mcfunc, methods=[basinhopping,], guess = guess ,SS_stress=SS_stress)
 
-	elif optmethod==10:
-		model_params = optimization_suite.minimize_suite(model.mcfunc, methods=[brute,], guess = guess ,SS_stress=SS_stress)
+    elif optmethod==10:
+        model_params = optimization_suite.minimize_suite(model.mcfunc, methods=[brute,], guess = guess ,SS_stress=SS_stress)
 
-	else:
-		model_params = optimization_suite.GA_minimize(model.mcfunc, guess)
+    else:
+        model_params = optimization_suite.GA_minimize(model.mcfunc, guess)
 
-	"""Plots the data versus the fitted irreversible model data"""
-	plot.plotmult2D(data, model.irreversible_model(model_params,SS_stress), title = 'Fitted Thermodynamics', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
-
+    """Plots the data versus the fitted irreversible model data"""
+    plot.plotmult2D(data, model.irreversible_model(model_params,SS_stress), title = 'Fitted Thermodynamics', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
+        
 """Setting window frame""" 
 root = tk.Tk()
 root.resizable(width=False, height=True)
