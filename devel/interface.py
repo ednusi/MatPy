@@ -2,10 +2,15 @@
 Loads a stress-strain plot given a filename.
 """
 
+"""Ignores all warnings (Remove this to debug)"""
+import warnings
+warnings.filterwarnings("ignore")
+
 """Tkinter for GUI"""
 import Tkinter as tk
 from Tkinter import Entry
 import tkFileDialog
+from Tkinter import N, S, E, W
 
 """Library for getting data"""
 import parser
@@ -45,9 +50,9 @@ def getfile():
 
 def display():
     """Displays experimental data from the requested file"""    
-    plot.plot2D(getfile().get_experimental_data(), title = 'File', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
+    plot.plot2D(getfile().get_experimental_data(), marker = 'o', title = 'File', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
 
-def display_with_yield():
+def display_with_yield(disp = True):
     """Display the plot of the file with its yield point and returns the model and that point."""
 
     """Opens file browser and gets selection"""
@@ -69,40 +74,38 @@ def display_with_yield():
     else:
         elastic, plastic = material_analytics.kmeanssplit(data)
         yieldpoint = plastic[0][None,]
-    
-    """Displays the found yield stress"""
-    plot.plotmult2D(data, yieldpoint, title = 'File', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
+
+    if disp:
+        """Displays the found yield stress"""
+        plot.plotmult2D(data, yieldpoint, title = 'File', marker1 = 'o', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
 
     return model, yieldpoint
 
+def statistical_model():
+    """Display the plot of the file fitted to a statistical model"""
+    
+    """Displays the currently selected yield point"""
+    model, yieldpoint = display_with_yield(disp=False)
+    data = model.get_experimental_data()
+
+    """This is for the logarithmic model"""
+    if fit_method.get() == 1:
+        model = material_analytics.log_approx(data)
+
+    """This is for the custom, slope-based model"""
+    if fit_method.get() == 2:
+        model = material_analytics.stress_model(data, yieldpoint)
+
+    """Take some points from the model to plot them"""
+    fittedpts = material_analytics.samplepoints(model,[0.,max(data[:,0])],10000)
+    plot.plotmult2D(data,fittedpts,marker1 = 'o', marker2 = '-',title = 'Stress v Strain',xtitle ='Strain ($\epsilon$)',ytitle='Stress ($\sigma$)')
  
 def constitutive_model():
     """Display the plot of the file fitted to a constitutive model"""
 
     """Displays the currently selected yield point"""
-    model, yieldpoint = display_with_yield()
-    
+    model, yieldpoint = display_with_yield(disp=False)
     data = model.get_experimental_data()
-    
-    
-    yieldpoint = None
-    
-    """Gets radio button input as to which method to use to optimize"""
-    if yield_method.get() == 1:
-        yieldpoint = material_analytics.yield_stress_classic_unfitted(data)
-        
-    elif yield_method.get() == 2:
-        yieldpoint = material_analytics.yield_stress_classic_fitted(data)
-        
-    elif yield_method.get() == 3:
-        yieldpoint = material_analytics.yield_stress(data)
-        
-    else:
-        elastic, plastic = material_analytics.kmeanssplit(data)
-        yieldpoint = plastic[0][None,]
-    
-    """Displays the found yield stress"""
-    plot.plotmult2D(data, yieldpoint, title = 'File', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
 
     """Will need to be set to user-input guess"""       
     guess = [-150,1]
@@ -128,15 +131,36 @@ def constitutive_model():
 
     """Plots the data versus the fitted irreversible model data"""
     plot.plotmult2D(data, model.irreversible_model(model_params,SS_stress), title = 'Fitted Thermodynamics', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
+
         
 """Setting window frame""" 
 root = tk.Tk()
-root.resizable(width=False, height=True)
+root.resizable(width=True, height=True)
 root.wm_title('Select your data file')   
-root.geometry('500x280')
+root.geometry('800x280')
+
+
+
+"""Placing user event buttons"""
+"""(Setting up the plotting experimental data button)"""
+display_data = tk.Button(root, text='Plot your experimental data',command=display)
+display_data.grid(row=13,column = 0, sticky=N+S+E+W)
+
+"""(Plotting with the predicted yield point)"""
+display_yield = tk.Button(root, text='Plot with yield',command=display_with_yield)
+display_yield.grid(row=13,column = 1, sticky=N+S+E+W)
+
+"""(Plotting the constitutive model)"""
+constitutive = tk.Button(root, text='Plot constitutive model',command=constitutive_model)
+constitutive.grid(row=13,column = 2, sticky=N+S+E+W)
+
+"""(Plotting the statistical model)"""
+statistical = tk.Button(root, text='Plot statistical model',command=statistical_model)
+statistical.grid(row=13,column = 3, sticky=N+S+E+W)
+
+
 
 """Yield Prediction radio buttons"""
-
 """(Selection Variable)"""
 lbl1 = tk.Label(root, text='Yield point selection')
 lbl1.grid(row=0, column=0, sticky='W')
@@ -154,16 +178,25 @@ b2.grid(row=2, column=0, sticky='W')
 b3.grid(row=3, column=0, sticky='W')
 b4.grid(row=4, column=0, sticky='W')
 
-"""Setting up the file selection button"""
-load_file = tk.Button(root, text='Plot your experimental data',command=display)
-load_file.place(relx=0.4,y=230,anchor=tk.NW)
 
-"""(THIS NEEDS TO BE CHANGED TO ACTUAL GEOMETRY MESSAGE)"""
-spacer = tk.Label(root, text='                                                            ')
-spacer.grid(row=0, column=3)
+
+"""Statistical Model Fitting"""
+"""(Fitting Variable)"""
+lbl_fit = tk.Label(root, text='Statistical Fit Method')
+lbl_fit.grid(row=0, column=1)
+fit_method = tk.IntVar()
+
+"""(Buttons)"""
+s1 = tk.Radiobutton(root, text='Logarithmic Fit', variable=fit_method, value=1)
+s2 = tk.Radiobutton(root, text='Custom Fit', variable=fit_method, value=2)
+
+"""(Button Placement)"""
+s1.grid(row=1, column=1)
+s2.grid(row=2, column=1)
+
+
 
 """Model fitting method radio buttons"""
-
 """(Selection Variable)"""
 lbl2 = tk.Label(root, text='Optimization Technique')
 lbl2.grid(row=0, column=5, sticky='E')
@@ -196,6 +229,8 @@ m9.grid(row=9, column=5, sticky='E')
 m10.grid(row=10, column=5, sticky='E')
 m11.grid(row=11, column=5, sticky='E')
 m12.grid(row=12, column=5, sticky='E')
+
+
 
 """Start the program"""
 root.mainloop()
