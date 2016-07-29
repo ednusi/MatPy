@@ -7,14 +7,22 @@ import Tkinter as tk
 from Tkinter import Entry
 import tkFileDialog
 
-"""Library for getting and plotting data"""
+"""Library for getting data"""
 import parser
+
+"""Must explicitly enable this for GUI to work"""
+import matplotlib
+matplotlib.use("TkAgg")
+
+"""Library for plotting data"""
 import graph_suite as plot
-import material_analytics
 
 """Data handlers"""
+import material_analytics
 import irreversible_stressstrain
 from irreversible_stressstrain import StressStrain as strainmodel
+
+"""Optimization tools for model training"""
 import optimization_suite
 from scipy.optimize import basinhopping
 from scipy.optimize import brute
@@ -36,15 +44,11 @@ def getfile():
     return model
 
 def display():
-    
-    """Displays experimental data from the requested file"""
-    model = getfile()
-    
-    """Displays the found yield stress"""
-    plot.plot2D(model.get_experimental_data(), title = 'File', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
+    """Displays experimental data from the requested file"""    
+    plot.plot2D(getfile().get_experimental_data(), title = 'File', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
 
 def display_with_yield():
-    """Display the plot of the file with its yield point"""
+    """Display the plot of the file with its yield point and returns the model and that point."""
 
     """Opens file browser and gets selection"""
     model = getfile()
@@ -68,25 +72,18 @@ def display_with_yield():
     
     """Displays the found yield stress"""
     plot.plotmult2D(data, yieldpoint, title = 'File', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
-      
- 
-def update():
-    """Display the plot of the file with its yield point"""
 
-    """Opens file browser and gets selection"""
-    name = tkFileDialog.askopenfilename()
-    
-    """Creates model for data"""
-    if 'xml' in name:
-        model = strainmodel(name, type='xml')
-        
-    else:
-        model = strainmodel(name)
+    return model, yieldpoint
+
+ 
+def constitutive_model():
+    """Display the plot of the file fitted to a constitutive model"""
+
+    """Displays the currently selected yield point"""
+    model, yieldpoint = display_with_yield()
     
     data = model.get_experimental_data()
     
-    """Will need to be set to user-input guess"""       
-    guess = [-150,1]
     
     yieldpoint = None
     
@@ -106,6 +103,9 @@ def update():
     
     """Displays the found yield stress"""
     plot.plotmult2D(data, yieldpoint, title = 'File', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
+
+    """Will need to be set to user-input guess"""       
+    guess = [-150,1]
 
     """[0,1] is the first row, second column, which is the stress values"""
     SS_stress = yieldpoint[0,1]

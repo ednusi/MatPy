@@ -9,12 +9,9 @@ from DataModelDict import DataModelDict as dmd
 """Used to compile Fortran"""
 import subprocess
 
-def build():
-	""" Compiles the Fortran code """
-	bashCommand = "make fortran"
-	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-
-build()
+""" Compiles the Fortran code """
+bashCommand = "make fortran"
+process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 
 """Importing the just-compiled irreversible thermo model"""
 import irreverisble 
