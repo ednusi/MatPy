@@ -9,6 +9,9 @@ import tkFileDialog
 
 """Library for getting and plotting data"""
 import parser
+"""Must explicitly enable this for GUI to work"""
+import matplotlib
+matplotlib.use("TkAgg")
 import graph_suite as plot
 import material_analytics
 
