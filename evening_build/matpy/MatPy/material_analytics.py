@@ -200,7 +200,7 @@ def yield_stress_classic_unfitted(data, cutoff = 0.0, offset = 0.002):
 
     return data[intersect_index][None,]
     
-def stress_model(data, strain = None):
+def stress_model(data, yielding = None, strain = None):
     """
     Returns a two-element array with the strain value as the first
     item, and the expected stress as the second if a strain value is provided.
@@ -220,8 +220,8 @@ def stress_model(data, strain = None):
     because otherwise the entire model is recalculated each time, which
     is hugely inefficient.    
     """
-    
-    yielding = yield_stress(data)[0]
+    if yielding is None:
+        yielding = yield_stress(data)[0]
 
     """Finds the yield index"""
     yield_index = 0
@@ -232,7 +232,7 @@ def stress_model(data, strain = None):
             break
 
     """Separates data into plastic and elastic regions"""
-    elastic = data[:yield_index+1]
+    elastic = data[:yield_index+2]
     plastic = data[yield_index+1:]
 
     """
@@ -276,6 +276,10 @@ def stress_model(data, strain = None):
     """We must determine which domain contains the strain point requested"""
     
     start_yield = upperyieldpoint[0]
+
+    """If we had lists previously, we have an extra dimension we need to get rid of for processing"""
+    if yielding.ndim == 2:
+        yielding = yielding[0]
     
     def stress_value(strain):
     
@@ -285,7 +289,7 @@ def stress_model(data, strain = None):
             return np.nan
         
         elif strain < start_yield:
-            
+
             """Linear approximation (elastic region)"""
             return [strain, lin_elastic_model(strain)]
 
@@ -429,7 +433,33 @@ def samplepoints(function, interval, numpoints):
     """Given a function and an interval (two-element list) and a number of points, applies it to the function and gets sample points at even intervals."""
 
     x_dom = np.linspace(interval[0],interval[1],numpoints)
-    return combine_data(x_dom,function(x_dom))
+
+    """
+    If the function returns lists, then we have to convert them to numpy arrays
+    This is necessary for our statistical model prediction method.
+    """
+    if isinstance(function(0), list):
+
+        nums = np.zeros(2)
+
+        """We convert to numpy arrays"""
+        for val in x_dom:
+            nextval = np.asarray(function(val))
+
+            """
+            If we go out of bounds, the model methods will begin to return nan, so at that point
+            we just need to return what we have so far.
+            """
+            if np.isnan(nextval).any():
+                break
+            
+            nums = np.vstack((nums, nextval[None,:]))
+
+        """Ignoring the first element which is 2 zeros (needed for size consistency when stacking)"""    
+        return nums[1:]
+
+    else:
+        return combine_data(x_dom,function(x_dom))
 
 def linfit(data, start=None):
     """Fits a linear regression to the data and returns it."""

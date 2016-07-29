@@ -20,6 +20,56 @@ from scipy.optimize import basinhopping
 from scipy.optimize import brute
 from pybrain.optimization import GA
 
+def getfile():
+    """Returns the model selected by the user (contained in a data file)"""
+    
+    """Opens file browser and gets selection"""
+    name = tkFileDialog.askopenfilename()
+    
+    """Creates model for data"""
+    if 'xml' in name:
+        model = strainmodel(name, type='xml')
+        
+    else:
+        model = strainmodel(name)
+
+    return model
+
+def display():
+    
+    """Displays experimental data from the requested file"""
+    model = getfile()
+    
+    """Displays the found yield stress"""
+    plot.plot2D(model.get_experimental_data(), title = 'File', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
+
+def display_with_yield():
+    """Display the plot of the file with its yield point"""
+
+    """Opens file browser and gets selection"""
+    model = getfile()
+    data = model.get_experimental_data()
+    
+    yieldpoint = None
+    
+    """Gets radio button input as to which method to use to optimize"""
+    if yield_method.get() == 1:
+        yieldpoint = material_analytics.yield_stress_classic_unfitted(data)
+        
+    elif yield_method.get() == 2:
+        yieldpoint = material_analytics.yield_stress_classic_fitted(data)
+        
+    elif yield_method.get() == 3:
+        yieldpoint = material_analytics.yield_stress(data)
+        
+    else:
+        elastic, plastic = material_analytics.kmeanssplit(data)
+        yieldpoint = plastic[0][None,]
+    
+    """Displays the found yield stress"""
+    plot.plotmult2D(data, yieldpoint, title = 'File', xtitle = 'Strain ($\epsilon$)', ytitle= 'Stress ($\sigma$)')
+      
+ 
 def update():
     """Display the plot of the file with its yield point"""
 
@@ -85,7 +135,7 @@ root.resizable(width=False, height=True)
 root.wm_title('Select your data file')   
 root.geometry('500x280')
 
-"""Analysis selection radio buttons"""
+"""Yield Prediction radio buttons"""
 
 """(Selection Variable)"""
 lbl1 = tk.Label(root, text='Yield point selection')
@@ -105,9 +155,10 @@ b3.grid(row=3, column=0, sticky='W')
 b4.grid(row=4, column=0, sticky='W')
 
 """Setting up the file selection button"""
-load_file = tk.Button(root, text='Open a file!',command=update)
+load_file = tk.Button(root, text='Plot your experimental data',command=display)
 load_file.place(relx=0.4,y=230,anchor=tk.NW)
 
+"""(THIS NEEDS TO BE CHANGED TO ACTUAL GEOMETRY MESSAGE)"""
 spacer = tk.Label(root, text='                                                            ')
 spacer.grid(row=0, column=3)
 
