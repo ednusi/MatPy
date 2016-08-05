@@ -13,6 +13,8 @@ Contents:
    
    Introduction
    Parser
+   Interface
+   Irreversible Thermodynamics
    Material Analytics
    Optimization Suite
    Graph Suite

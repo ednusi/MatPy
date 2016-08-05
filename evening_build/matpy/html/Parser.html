@@ -25,11 +25,11 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="MaPy 1.0.0 documentation" href="index.html" />
-    <link rel="next" title="Material Analytics" href="Material Analytics.html" />
+    <link rel="next" title="Irreversible Thermodynamics" href="Irreversible Thermodynamics.html" />
     <link rel="prev" title="Introduction" href="Introduction.html" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">  
@@ -50,28 +50,28 @@ the second one stress.</p>
 <p>If the data is in an XML file, it should have
 a stressStrain tag where the relevant data begins
 and then rows and columns with data as follows:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="o">&lt;</span><span class="n">headers</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;1&quot;</span><span class="o">&gt;</span><span class="k">True</span> <span class="n">Strain</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;2&quot;</span><span class="o">&gt;</span><span class="k">True</span> <span class="n">Stress</span> <span class="p">[</span><span class="n">MPa</span><span class="p">]</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;3&quot;</span><span class="o">&gt;</span><span class="k">True</span> <span class="n">Strain</span> <span class="n">Rate</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="n">s</span><span class="p">]</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
-<span class="o">&lt;/</span><span class="n">headers</span><span class="o">&gt;</span>
-<span class="o">&lt;</span><span class="n">rows</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="n">row</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;1&quot;</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;1&quot;</span><span class="o">&gt;</span><span class="mf">0.000303349228225</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;2&quot;</span><span class="o">&gt;-</span><span class="mf">10.3437455647</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;3&quot;</span><span class="o">&gt;</span><span class="mf">0.0</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
-    <span class="o">&lt;/</span><span class="n">row</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="n">row</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;2&quot;</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;1&quot;</span><span class="o">&gt;</span><span class="mf">4.86122562637e-06</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;2&quot;</span><span class="o">&gt;</span><span class="mf">9.89667339963</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="n">column</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;3&quot;</span><span class="o">&gt;-</span><span class="mf">596.976005197</span><span class="o">&lt;/</span><span class="n">column</span><span class="o">&gt;</span>
-    <span class="o">&lt;/</span><span class="n">row</span><span class="o">&gt;</span>
-<span class="o">&lt;/</span><span class="n">rows</span><span class="o">&gt;</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span>&lt;headers&gt;
+    &lt;column id=&quot;1&quot;&gt;True Strain&lt;/column&gt;
+    &lt;column id=&quot;2&quot;&gt;True Stress [MPa]&lt;/column&gt;
+    &lt;column id=&quot;3&quot;&gt;True Strain Rate [1/s]&lt;/column&gt;
+&lt;/headers&gt;
+&lt;rows&gt;
+    &lt;row id=&quot;1&quot;&gt;
+        &lt;column id=&quot;1&quot;&gt;0.000303349228225&lt;/column&gt;
+        &lt;column id=&quot;2&quot;&gt;-10.3437455647&lt;/column&gt;
+        &lt;column id=&quot;3&quot;&gt;0.0&lt;/column&gt;
+    &lt;/row&gt;
+    &lt;row id=&quot;2&quot;&gt;
+        &lt;column id=&quot;1&quot;&gt;4.86122562637e-06&lt;/column&gt;
+        &lt;column id=&quot;2&quot;&gt;9.89667339963&lt;/column&gt;
+        &lt;column id=&quot;3&quot;&gt;-596.976005197&lt;/column&gt;
+    &lt;/row&gt;
+&lt;/rows&gt;
 </pre></div>
 </div>
 <dl class="class">
 <dt id="mat_data_parser.stress_strain">
-<em class="property">class </em><code class="descclassname">parser.</code><code class="descname">stress_strain</code><span class="sig-paren">(</span><em>data_file</em>, <em>type='txt'</em><span class="sig-paren">)</span><a class="headerlink" href="#mat_data_parser.stress_strain" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mat_data_parser.</code><code class="descname">stress_strain</code><span class="sig-paren">(</span><em>data_file</em>, <em>type='txt'</em><span class="sig-paren">)</span><a class="headerlink" href="#mat_data_parser.stress_strain" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class will contain the relevant data from a file</p>
 <p>For the constructor:
 Takes in a file name, by default assuming it&#8217;s a text file.</p>
@@ -105,7 +105,7 @@ data with those methods.</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="Introduction.html" title="previous chapter">Introduction</a></li>
-      <li>Next: <a href="Material Analytics.html" title="next chapter">Material Analytics</a></li>
+      <li>Next: <a href="Irreversible Thermodynamics.html" title="next chapter">Irreversible Thermodynamics</a></li>
   </ul></li>
 </ul>
 </div>
@@ -119,11 +119,14 @@ data with those methods.</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -134,8 +137,8 @@ data with those methods.</p>
       &copy;2016, Edward Alexander Nusinovich.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="_sources/Parser.txt"

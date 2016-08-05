@@ -26,10 +26,10 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="MaPy 1.0.0 documentation" href="index.html" />
     <link rel="next" title="Optimization Suite" href="Optimization Suite.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="Parser.html" />
+    <link rel="prev" title="Irreversible Thermodynamics" href="Irreversible Thermodynamics.html" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">  
@@ -45,7 +45,10 @@
 <strong>automatically determine the yield stress</strong>
 of a material (see <em>yield_stress()</em>), even with noisy data, given
 a stress-strain curve in the form
-[Strain|Stress] in each row.</p>
+[Strain|Stress] in each row. Also automatically
+creates a phenomenological model for the material&#8217;s behavior under
+stress and can return Young&#8217;s Modulus for the elastic deformation
+of the material.</p>
 <p>This works for alloys that exhibit the yield point
 phenomenon as well.</p>
 <dl class="function">
@@ -166,7 +169,7 @@ there are an odd number of points.</p>
 
 <dl class="function">
 <dt id="material_analytics.stress_model">
-<code class="descclassname">material_analytics.</code><code class="descname">stress_model</code><span class="sig-paren">(</span><em>data</em>, <em>strain=None</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.stress_model" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">material_analytics.</code><code class="descname">stress_model</code><span class="sig-paren">(</span><em>data</em>, <em>yielding=None</em>, <em>strain=None</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.stress_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a two-element array with the strain value as the first
 item, and the expected stress as the second if a strain value is provided.
 Otherwise returns a function that will predict stress given a strain value.</p>
@@ -186,7 +189,7 @@ is hugely inefficient.</p>
 
 <dl class="function">
 <dt id="material_analytics.yield_stress">
-<code class="descclassname">material_analytics.</code><code class="descname">yield_stress</code><span class="sig-paren">(</span><em>model</em>, <em>numpoints=1000</em>, <em>cutoff=0.05</em>, <em>startx=None</em>, <em>endx=None</em>, <em>decreasingend=False</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.yield_stress" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">material_analytics.</code><code class="descname">yield_stress</code><span class="sig-paren">(</span><em>model</em>, <em>numpoints=1000</em>, <em>cutoff=0.0</em>, <em>startx=None</em>, <em>endx=None</em>, <em>decreasingend=False</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.yield_stress" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds the yield stress of a dataset <strong>automatically</strong> using kmeans clustering and covariance analysis.</p>
 <p>In order to use this function, you just need to provide it with a stress/strain curve as a numpy array
 where the data is formatted as a two-column array. The first column is all of the stress values,
@@ -196,6 +199,18 @@ and then to analyze where the slope begins to be decrease relative to the averag
 where <span class="math">\(\partial \sigma/ \partial \epsilon &lt; (f(b)-f(a))/(b-a)\)</span> where a and b are the beginning and
 end of the interval, respectively. For the purposes of this method, it is important that we have data up
 until the point of failure of a given material.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.yield_stress_classic_fitted">
+<code class="descclassname">material_analytics.</code><code class="descname">yield_stress_classic_fitted</code><span class="sig-paren">(</span><em>data_original</em>, <em>cutoff=0.0</em>, <em>offset=0.002</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.yield_stress_classic_fitted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a log curve</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="material_analytics.yield_stress_classic_unfitted">
+<code class="descclassname">material_analytics.</code><code class="descname">yield_stress_classic_unfitted</code><span class="sig-paren">(</span><em>data</em>, <em>cutoff=0.0</em>, <em>offset=0.002</em><span class="sig-paren">)</span><a class="headerlink" href="#material_analytics.yield_stress_classic_unfitted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine average slope</p>
 </dd></dl>
 
 <dl class="function">
@@ -215,7 +230,7 @@ until the point of failure of a given material.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="Parser.html" title="previous chapter">&lt;no title&gt;</a></li>
+      <li>Previous: <a href="Irreversible Thermodynamics.html" title="previous chapter">Irreversible Thermodynamics</a></li>
       <li>Next: <a href="Optimization Suite.html" title="next chapter">Optimization Suite</a></li>
   </ul></li>
 </ul>
@@ -230,11 +245,14 @@ until the point of failure of a given material.</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -245,8 +263,8 @@ until the point of failure of a given material.</p>
       &copy;2016, Edward Alexander Nusinovich.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="_sources/Material Analytics.txt"
