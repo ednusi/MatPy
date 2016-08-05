@@ -1,6 +1,6 @@
 Metadata-Version: 1.0
 Name: MatPy
-Version: 1.0.3
+Version: 1.1.0
 Summary: A toolbox for intelligent material design, automatic yield stress determination, and automatic construction of a mechanical behavior model based on experimental stress-strain data.
 Home-page: https://github.com/ednusi/MatPy/tree/master/evening_build/matpy
 Author: Edward Alexander Nusinovich
