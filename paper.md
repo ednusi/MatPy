@@ -1,38 +1,35 @@
 ---
 title: 'MatPy: A toolbox for intelligent material design, and automatic yield stress determination'
- tags:
-    - materials
-    - toolbox
-    - design
-    - stress
-    - strain
-    - nonconvex optimization
-    - design
-    
-  authors:
-   - name: Edward Alexander Nusinovich
-     orcid: 0000-0002-7527-4474
-     affiliation: 1
-   - name: Sheng-Yen Li
-     affiliation: 1
-   - name: Steven P. Mates
-     affiliation: 1
-   - name: Carelyn Campbell
-     affiliation: 1
-  affiliations:
-   - name: U.S. National Institute of Standards and Technology
-     index: 1
-
-  date: 3 March 2017
-  bibliography: paper.bib
-  ---
+tags:
+- materials
+- toolbox
+- design
+- stress
+- strain
+- nonconvex optimization
+- design
+authors:
+- name: Edward Alexander Nusinovich
+ orcid: 0000-0002-7527-4474
+ affiliation: 1
+- name: Sheng-Yen Li
+ affiliation: 1
+- name: Steven P. Mates
+ affiliation: 1
+- name: Carelyn Campbell
+ affiliation: 1
+affiliations:
+- name: U.S. National Institute of Standards and Technology
+ index: 1
+date: 3 March 2017
+---
 
   # Summary
 
-  A software package was designed that analyzes stored data files, visualizes the data, 
+  MatPy analyzes stored data files, visualizes the data, 
   and applies optimization techniques to discover material parameters in phase-based models
-  and statistical models that best fit the data. The data from the Kolsky Bar can be saved 
-  to a variety of data schemas, including but not limited to data and XML file schemas, and 
+  and statistical models that best fit the data. The data from the Kolsky Bar mechanical testing device can be saved 
+  to a variety of data schemas, including but not limited to .data and XML file schemas, and 
   had to be parsed from each of these. Parsing these data schemas is a complex and nuanced 
   task, because each data format comes with unique features in the representation of a set 
   of data by a separate encoding mechanism. 
