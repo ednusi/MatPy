@@ -156,7 +156,7 @@ def yield_stress_classic_fitted(data_original, cutoff = 0.0, offset = 0.002):
     """Fitted this offset line to the left side"""
     young_modulus = (data[bend,1]-data[0,1])/(data[bend,0]-data[0,0])
     def linear_estimation(x):
-	return data[0,1] + young_modulus*(x-offset)
+    return data[0,1] + young_modulus*(x-offset)
 
     """Sample linear points"""
     linear_y = linear_estimation(data_x)
